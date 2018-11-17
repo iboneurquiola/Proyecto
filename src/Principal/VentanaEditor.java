@@ -1,12 +1,16 @@
 package Principal;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -16,6 +20,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamPanel;
 
 import marvin.gui.MarvinImagePanel;
 import marvin.image.MarvinImage;
@@ -43,7 +50,7 @@ public class VentanaEditor extends JFrame
      
     private MarvinImagePlugin     imagePlugin; 
      
-    public VentanaEditor() 
+    public VentanaEditor()  
     { 
         ButtonHandler buttonHandler = new ButtonHandler(); 
         JMenuBar menu = new JMenuBar();
@@ -394,14 +401,15 @@ public class VentanaEditor extends JFrame
        	reset = new JButton("Reset"); 
         reset.addActionListener(buttonHandler); 
         
-        seleccionarArchivo = new JButton("Seleccionar archivo" ) ;
-        guardar = new JButton( new ImageIcon( "Guardar" ) );
-        guardarComo = new JButton( new ImageIcon("Guardar como" ) );
+        
+        guardar = new JButton( "Guardar" );
+        seleccionarArchivo = new JButton( "Abrir foto" );
+        guardarComo = new JButton( "Guardar como" );
         guardar.addActionListener(buttonHandler);
         guardarComo.addActionListener(buttonHandler);
         seleccionarArchivo.addActionListener(buttonHandler); 
         
-        sacarFoto = new JButton("Sacar foto" ) ;
+        sacarFoto = new JButton("Sacar foto"  ) ;
         sacarFoto.addActionListener(buttonHandler); 
 
         
@@ -411,6 +419,7 @@ public class VentanaEditor extends JFrame
         panelBottom.add(reset);
         panelBottom.add(guardar);
         panelBottom.add(guardarComo);
+        panelBottom.add(sacarFoto);
 
          
         // ImagePanel 
@@ -473,7 +482,29 @@ public class VentanaEditor extends JFrame
             } 
 		  	  else if(a_event.getSource() == reset)
 		      { 
-		      	loadImage(path);
+		  		
+				  	loadImage(path);
+				  
+				 
+		      }
+		  	  else if(a_event.getSource() == sacarFoto)
+		      { 
+		  		Webcam webcam = Webcam.getDefault();
+		  		webcam.open();
+		  		
+		   
+		  		  try
+		  		  {
+		            BufferedImage image = webcam.getImage();
+		      
+		            ImageIO.write(image, "PNG", new File("webcam_test.png"));
+		        } 
+		  		  catch (IOException ex) 
+		  		  {
+		          
+		        }
+				  	loadImage("webcam_test.png");
+				  	webcam.close();
 				 
 		      }
             else if(a_event.getSource() == btnTelevision){ 

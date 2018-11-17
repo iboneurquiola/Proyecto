@@ -20,7 +20,7 @@ public class Identificacion extends JFrame
 	JPanel panelDcho = new JPanel();
 	JLabel lblImagen;
 	CustomTextField usuario;
-	CustomPasswordField contraseña;
+	CustomTextField contraseña;
 	
 	public Identificacion() 
     {
@@ -42,7 +42,7 @@ public class Identificacion extends JFrame
 		usuario.setBounds(100, 100, 300, 30);
 		f.add(usuario);
 		
-		contraseña = new CustomPasswordField (0);
+		contraseña = new CustomTextField (0);
 		contraseña.setPlaceholder("Contraseña");
 		contraseña.setBounds(100, 140, 300, 30);
 		f.add(contraseña);
@@ -71,7 +71,7 @@ public class Identificacion extends JFrame
 					String user = usuario.getText();
 					String password = contraseña.getText();
 			
-//					VentanaPrincipal f = new VentanaPrincipal();
+					VentanaPrincipal f = new VentanaPrincipal();
 					
 				}
 			}	
