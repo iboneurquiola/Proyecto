@@ -3,14 +3,18 @@ package Principal;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -18,10 +22,13 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamException;
 import com.github.sarxos.webcam.WebcamPanel;
 
 import marvin.gui.MarvinImagePanel;
@@ -30,10 +37,15 @@ import marvin.io.MarvinImageIO;
 import marvin.plugin.MarvinImagePlugin;
 import marvin.util.MarvinPluginLoader;
 
+
 public class VentanaEditor extends JFrame
 { 
-    private MarvinImagePanel     imagePanel; 
-    private MarvinImage         image,backupImage; 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private MarvinImagePanel     imagePanel; 
+    private MarvinImage         image; 
     private String path;
     private JPanel             panelBottom; 
     private JMenuItem btnMosaico, btnTelevision, btnFixedCamera, btnSceneBack, btnGaussian, btnPixelize, btnAlpha, 
@@ -46,12 +58,16 @@ public class VentanaEditor extends JFrame
 	btnImageSlicer, btnMaximum, btnMedian, btnMinimum, btnMode, btnSteganography, btnSubtract, btnTexture, 
 	btnFlip, btnRotate, btnScale, btnSkew, btnWaterShed;
      
-    private JButton seleccionarArchivo, reset, guardar, guardarComo, sacarFoto;
+    private JButton volver, seleccionarArchivo, reset, guardar, guardarComo, sacarFoto, compartir;
      
     private MarvinImagePlugin     imagePlugin; 
      
-    public VentanaEditor()  
+    public VentanaEditor(String path)  
     { 
+    	if(path != null)
+    	{
+    	loadImage(path);
+    	}
         ButtonHandler buttonHandler = new ButtonHandler(); 
         JMenuBar menu = new JMenuBar();
 		JMenu filtros = new JMenu("Filtros");
@@ -396,30 +412,73 @@ public class VentanaEditor extends JFrame
 
         // Create Graphical Interface 
         
-       
-   
-       	reset = new JButton("Reset"); 
+		volver = new JButton();
+        volver.setBounds(0, 10, 40, 40);
+        ImageIcon v = new ImageIcon(getClass().getResource("/images/volver.png"));
+        Icon iconoVolver = new ImageIcon(v.getImage().getScaledInstance(volver.getWidth(), volver.getHeight(), Image.SCALE_DEFAULT));
+        volver.setIcon(iconoVolver);
+        volver.setToolTipText("Volver");
+        volver.addActionListener(buttonHandler); 
+
+		reset = new JButton();
+        reset.setBounds(300, 10, 40, 40);
+        ImageIcon r = new ImageIcon(getClass().getResource("/images/reset.png"));
+        Icon iconoReset = new ImageIcon(r.getImage().getScaledInstance(reset.getWidth(), reset.getHeight(), Image.SCALE_DEFAULT));
+        reset.setIcon(iconoReset);
+        reset.setToolTipText("Reset");
         reset.addActionListener(buttonHandler); 
         
+        guardar = new JButton();
+        guardar.setBounds(50, 10, 40, 40);
+        ImageIcon g = new ImageIcon(getClass().getResource("/images/save.png"));
+        Icon iconoGuardar = new ImageIcon(g.getImage().getScaledInstance(guardar.getWidth(), guardar.getHeight(), Image.SCALE_DEFAULT));
+        guardar.setIcon(iconoGuardar);
+        guardar.setToolTipText("Guardar");
         
-        guardar = new JButton( "Guardar" );
-        seleccionarArchivo = new JButton( "Abrir foto" );
-        guardarComo = new JButton( "Guardar como" );
+        seleccionarArchivo = new JButton();
+        seleccionarArchivo.setBounds(100, 10, 40, 40);
+        ImageIcon s = new ImageIcon(getClass().getResource("/images/open.png"));
+        Icon iconoSeleccionar = new ImageIcon(s.getImage().getScaledInstance(seleccionarArchivo.getWidth(), seleccionarArchivo.getHeight(), Image.SCALE_DEFAULT));
+        seleccionarArchivo.setIcon(iconoSeleccionar);
+        seleccionarArchivo.setToolTipText("Abrir archivo");
+        
+        guardarComo = new JButton();
+        guardarComo.setBounds(150, 10, 40, 40);
+        ImageIcon gc = new ImageIcon(getClass().getResource("/images/saveas.png"));
+        Icon iconoGuardarComo = new ImageIcon(gc.getImage().getScaledInstance(guardarComo.getWidth(), guardarComo.getHeight(), Image.SCALE_DEFAULT));
+        guardarComo.setIcon(iconoGuardarComo);
+        guardarComo.setToolTipText("Guardar como");
+    
         guardar.addActionListener(buttonHandler);
         guardarComo.addActionListener(buttonHandler);
         seleccionarArchivo.addActionListener(buttonHandler); 
         
-        sacarFoto = new JButton("Sacar foto"  ) ;
+        sacarFoto = new JButton();
+        sacarFoto.setBounds(200, 10, 40, 40);
+        ImageIcon sacar = new ImageIcon(getClass().getResource("/images/foto.jpg"));
+        Icon iconoSacarF = new ImageIcon(sacar.getImage().getScaledInstance(sacarFoto.getWidth(), sacarFoto.getHeight(), Image.SCALE_DEFAULT));
+        sacarFoto.setIcon(iconoSacarF);
+        sacarFoto.setToolTipText("Sacar foto");
+     
         sacarFoto.addActionListener(buttonHandler); 
 
+        compartir = new JButton();
+        compartir.setBounds(250, 10, 40, 40);
+        ImageIcon c = new ImageIcon(getClass().getResource("/images/share.png"));
+        Icon iconoCompartir = new ImageIcon(c.getImage().getScaledInstance(compartir.getWidth(), compartir.getHeight(), Image.SCALE_DEFAULT));
+        compartir.setIcon(iconoCompartir);
+        compartir.setToolTipText("Compartir");
         
+        compartir.addActionListener(buttonHandler); 
+       
         panelBottom = new JPanel(); 
-        
+        panelBottom.add(volver);
         panelBottom.add(seleccionarArchivo);
         panelBottom.add(reset);
         panelBottom.add(guardar);
         panelBottom.add(guardarComo);
         panelBottom.add(sacarFoto);
+        panelBottom.add(compartir);
 
          
         // ImagePanel 
@@ -476,7 +535,7 @@ public class VentanaEditor extends JFrame
 				}
 				else if (resultado == JFileChooser.CANCEL_OPTION)
 				{
-					System.out.println("No hay archivo seleccionado.");
+					JOptionPane.showMessageDialog(null, "No hay archivo seleccionado.");
 				} 
 			 
             } 
@@ -487,25 +546,24 @@ public class VentanaEditor extends JFrame
 				  
 				 
 		      }
+		  	 else if(a_event.getSource() == volver)
+		      { 
+		  		
+				  	VentanaPrincipal f = new VentanaPrincipal();
+				  
+				 
+		      }
+		  	 else if(a_event.getSource() == compartir)
+		      { 
+		  		
+			  	EnvioPorMail env = new EnvioPorMail();
+				  	
+				 
+		      }
 		  	  else if(a_event.getSource() == sacarFoto)
 		      { 
-		  		Webcam webcam = Webcam.getDefault();
-		  		webcam.open();
+		  		SwingUtilities.invokeLater(new WebcamViewerExample());
 		  		
-		   
-		  		  try
-		  		  {
-		            BufferedImage image = webcam.getImage();
-		      
-		            ImageIO.write(image, "PNG", new File("webcam_test.png"));
-		        } 
-		  		  catch (IOException ex) 
-		  		  {
-		          
-		        }
-				  	loadImage("webcam_test.png");
-				  	webcam.close();
-				 
 		      }
             else if(a_event.getSource() == btnTelevision){ 
                 imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.artistic.television.jar");                  
@@ -777,9 +835,18 @@ public class VentanaEditor extends JFrame
             } 
  		else if(a_event.getSource() == btnWaterShed){ 
                 imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.transform.watershed.jar");                  
-                imagePlugin.process(image, image); 
+                imagePlugin.process(image, image);
+                imagePlugin.setAttribute("hsIntensidade", 50);   
             } 
-
+ 		else if(a_event.getSource() == btnRotate)
+ 		{
+// 			 double r = Math.toRadians(grados); //se convierte a radianes lo grados 
+//             AffineTransform a = new AffineTransform(); 
+//             a.rotate(r, this.getWidth() / 2, this.getHeight() / 2); //se asigna el angulo y centro de rotacion 
+//             ((Graphics2D) g).setTransform(a); 
+//             g.drawImage(imagen_filtro, 0, 0, this); 
+//             break; 
+ 		}
         
 
             image.update(); 
