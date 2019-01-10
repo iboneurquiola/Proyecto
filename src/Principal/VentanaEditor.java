@@ -1,24 +1,18 @@
 package Principal;
 
+import static marvin.MarvinPluginCollection.crop;
+
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.sql.Statement;
-import java.util.concurrent.TimeoutException;
 
-import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,9 +23,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 
 import marvin.gui.MarvinImagePanel;
 import marvin.image.MarvinImage;
@@ -47,7 +39,7 @@ public class VentanaEditor extends JFrame
 	 */
 	private static final long serialVersionUID = 1L;
 	private static MarvinImagePanel     imagePanel; 
-    private static MarvinImage         image; 
+    private static MarvinImage         backupImage,image; 
     private static String path;
     private JPanel             panelBottom; 
     private JMenuItem btnMosaico, btnTelevision, btnFixedCamera, btnSceneBack, btnGaussian, btnPixelize, btnAlpha, 
@@ -127,7 +119,7 @@ public class VentanaEditor extends JFrame
 		btnAlpha.addActionListener(buttonHandler);
 	
 		btnBrightness = new JMenuItem("Brightness and Contrast");
-		menuColor.add(btnAlpha);
+		editar.add(btnAlpha);
 		btnBrightness.addActionListener(buttonHandler);
 	
 		btnColorChannel = new JMenuItem("Color Channel");
@@ -345,7 +337,7 @@ public class VentanaEditor extends JFrame
 		filtros.add(menuSegmentation);
 
 		btnCrop = new JMenuItem("Crop");
-		menuSegmentation.add(btnCrop);
+		editar.add(btnCrop);
 		btnCrop.addActionListener(buttonHandler);
 
 		btnFloodFill = new JMenuItem("Flood Fill Segmentation");
@@ -391,15 +383,15 @@ public class VentanaEditor extends JFrame
 		filtros.add(menuTransform);
 
 		btnFlip = new JMenuItem("Flip");
-		menuTransform.add(btnFlip);
+		editar.add(btnFlip);
 		btnFlip.addActionListener(buttonHandler);
 
 		btnRotate = new JMenuItem("Rotate");
-		menuTransform.add(btnRotate);
+		editar.add(btnRotate);
 		btnRotate.addActionListener(buttonHandler);
 
 		btnScale = new JMenuItem("Scale");
-		menuTransform.add(btnScale);
+		editar.add(btnScale);
 		btnScale.addActionListener(buttonHandler);
 
 
@@ -497,10 +489,11 @@ public class VentanaEditor extends JFrame
     {
     	
         image = MarvinImageIO.loadImage(path);
-
+        backupImage = image.clone(); 
+        
         imagePanel.setImage(image); 
         imagePanel.getImage().resize(700, 500);
-        imagePanel.setBounds(100, 100, 500, 500);
+        imagePanel.setBounds(100, 100, 700, 500);
     } 
    
      
@@ -518,9 +511,6 @@ public class VentanaEditor extends JFrame
 					path = archivoseleccionado.getAbsolutePath();
 					loadImage(path);
 				
-				Hilo h = new Hilo();
-		    	h.run();
-			 
             } 
 		  	  else if(a_event.getSource() == reset)
 		      { 
@@ -824,7 +814,10 @@ public class VentanaEditor extends JFrame
                 imagePlugin.process(image, image);
                 imagePlugin.setAttribute("hsIntensidade", 50);   
             } 
- 
+ 		else if (a_event.getSource() == btnCrop)
+ 		{
+ 			crop(image.clone(), image, 60, 32, 182, 62);
+ 		}
  		else if (a_event.getSource() == guardarComo)
  		{
  			File fPath = guardarArchivo(); 
@@ -851,9 +844,9 @@ public class VentanaEditor extends JFrame
 			} catch (Exception e2) {
 				
 			}
-			loadImage(path);
  		}
-
+            image.update();
+			imagePanel.setImage(image);
            
         } 
     }
@@ -870,14 +863,19 @@ public class VentanaEditor extends JFrame
 			return null;
 	}
     private File guardarArchivo() {
-		File dirActual = new File( System.getProperty("user.home") );
-		JFileChooser chooser = new JFileChooser( dirActual );
-		chooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
-		int returnVal = chooser.showSaveDialog( null );
-		if (returnVal == JFileChooser.APPROVE_OPTION)
-			return chooser.getSelectedFile();
-		else 
-			return null;
+		
+    	JFileChooser file=new JFileChooser();
+    	file.showOpenDialog(this);
+    	File abre=file.getSelectedFile();
+    	return abre;
+    	  
+//    	File dirActual = new File( System.getProperty("user.home") );
+//		JFileChooser chooser = new JFileChooser( dirActual );
+//		chooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
+//		int returnVal = chooser.showSaveDialog(null);
+//		chooser.get
+//		else 
+//			return null;
 	}
     public static BufferedImage Conversion() 
     {
@@ -885,12 +883,12 @@ public class VentanaEditor extends JFrame
     	BufferedImage bI = img.getBufferedImage();
     	return bI;
     }
-    public static void Guardar() 
-    {
-    	 MarvinImageIO.saveImage(image, "user.home");
-    	 
-    	 
-    }
+//    public static void Guardar() 
+//    {
+//    	 MarvinImageIO.saveImage(image, "user.home");
+//    	 
+//    	 
+//    }
 
   
 }

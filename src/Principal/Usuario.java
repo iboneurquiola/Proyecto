@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 
 
@@ -22,7 +23,11 @@ public class Usuario
 		this.usuario = u;
 		this.contraseña = c;
 	}
-
+	public Usuario()
+	{
+		this.usuario = null;
+		this.contraseña = null;
+	}
 
 	
 	public String consultarCorreo( Statement stm) throws SQLException
@@ -41,6 +46,23 @@ public class Usuario
 				"WHERE (usuario = '" + usuario + "')";
 		rs = con.createStatement().executeQuery(sentSQL);
 		return rs.getString("contraseña");
+			
+	}
+	public static ArrayList <Usuario> listaUsuarios( ) throws SQLException
+	{
+		ArrayList<Usuario> usuarios = new ArrayList <Usuario>();
+		con = BaseDeDatos.getConnection();
+		String sentSQL = "SELECT * FROM usuarios ";
+		rs = con.createStatement().executeQuery(sentSQL);
+		
+		while(rs.next())
+		{
+			Usuario u = new Usuario();
+			u.setUsuario(rs.getString(1).toString());
+			u.setContraseña(rs.getString(2).toString());
+			usuarios.add(u);
+		}
+		return usuarios;
 			
 	}
 	public boolean comprobarContra(Statement stm) throws SQLException 
@@ -105,13 +127,13 @@ public class Usuario
 
 
 
-	public static String getUsuario() {
+	public String getUsuario() {
 		return usuario;
 	}
 
 
 
-	public static void setUsuario(String usuario) {
+	public void setUsuario(String usuario) {
 		Usuario.usuario = usuario;
 	}
 
@@ -123,13 +145,13 @@ public class Usuario
 
 
 
-	public static void setContraseña(String contraseña) {
+	public void setContraseña(String contraseña) {
 		Usuario.contraseña = contraseña;
 	}
 
 
 
-	public static String getCorreo() {
+	public String getCorreo() {
 		return correo;
 	}
 
