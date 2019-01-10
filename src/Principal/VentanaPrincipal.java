@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Statement;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -27,8 +28,10 @@ public class VentanaPrincipal extends JFrame
 	private Fondo f;
 	
 	
-	public VentanaPrincipal() 
+	
+	public VentanaPrincipal(Usuario u) 
     {
+	
     	frame = new JFrame();
 		
 		frame.setTitle("NERIBO PHOTO EDITOR");
@@ -74,7 +77,8 @@ public class VentanaPrincipal extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 			
-				VentanaEditor editor = new VentanaEditor(null);
+				VentanaEditor editor = new VentanaEditor(null, u);
+				
 			}	
 		});	
 		
@@ -84,7 +88,7 @@ public class VentanaPrincipal extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				
-				VentanaCollage collage = new VentanaCollage();
+				VentanaCollage collage = new VentanaCollage(u);
 			}	
 		});	
 		frame.setVisible(true);
