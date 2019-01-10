@@ -16,7 +16,7 @@ public class DosXUno extends Collage
 		this.imagen2 = img2;
 
 	}
-	public BufferedImage HacerCollage()
+	public BufferedImage CopiarImg1()
 	{
 		
 		iFinal = Collage.CopiarImagen(0,0,400, 200, imagen1, iFinal);
@@ -24,6 +24,5 @@ public class DosXUno extends Collage
 		
 		return iFinal;
 	}
-	
 
 }

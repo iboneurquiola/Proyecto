@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.sql.Statement;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -42,13 +43,14 @@ public class EditarCollage extends JFrame
 		btnIterated, btnJulia, btnLindenmayer, btnManderbrot, btnText, btnRestoration, btnCrop, btnFloodFill, 
 		btnImageSlicer, btnMaximum, btnMedian, btnMinimum, btnMode, btnSteganography, btnSubtract, btnTexture, 
 		btnFlip, btnRotate, btnScale, btnSkew, btnWaterShed;
-	     
 	    private JButton  reset, guardar,volver, guardarComo,compartir;
-	     
+	    private Usuario u;
 	    private MarvinImagePlugin     imagePlugin; 
 	     
-	    public EditarCollage(BufferedImage image)  
+	    public EditarCollage(BufferedImage image, Usuario u)  
 	    { 
+	    	this.u = u;
+	    	
 	    	ImageIcon imgReturn = new ImageIcon(image);
 	    	
 	        ButtonHandler buttonHandler = new ButtonHandler(); 
@@ -758,7 +760,7 @@ public class EditarCollage extends JFrame
 	                imagePlugin.setAttribute("hsIntensidade", 50);   
 	            } 
 	 		else if(a_event.getSource() == volver){ 
-	 			VentanaPrincipal f = new VentanaPrincipal();
+	 			VentanaPrincipal f = new VentanaPrincipal(u);
             } 
 
 	        

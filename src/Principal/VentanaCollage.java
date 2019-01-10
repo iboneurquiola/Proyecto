@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Statement;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -22,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import marvin.image.MarvinImage;
 
@@ -35,14 +37,14 @@ public class VentanaCollage extends JFrame
 	private static final long serialVersionUID = 1L;
 	private JPanel panelCentral; 
     private JButton dosxuno, unoxdos, dosxdos, tresxuno;
+    private Usuario u;
      
-   
-     
-    public VentanaCollage()  
+    public VentanaCollage(Usuario u)  
     { 
+    	
     	setTitle("Collage");
     	setSize(500,400);
-		
+		this.u=u;
     	ButtonHandler buttonHandler = new ButtonHandler(); 
     
 		dosxuno = new JButton();
@@ -100,24 +102,12 @@ public class VentanaCollage extends JFrame
    
     private File[] SeleccionarArchivos()
     {
-    	 File[] archivos = null;
-    	 JFileChooser fc = new JFileChooser();
-    	 fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-         if (!fc.isMultiSelectionEnabled()) {
-            fc.setMultiSelectionEnabled(true);
-         }
+    	JFileChooser dialog = new JFileChooser();
+    	 dialog.setMultiSelectionEnabled(true);
+    	 dialog.showOpenDialog(null);
 
-         int returnVal = fc.showOpenDialog(null); 
-    	 if (returnVal == JFileChooser.APPROVE_OPTION) {
-    	             
-         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-  	      if (!fc.isMultiSelectionEnabled()) {
-  	         fc.setMultiSelectionEnabled(true);
-   	      }            
-    	    
-  	     archivos = fc.getSelectedFiles();
-  	     
-    }
+    	 File[] archivos = dialog.getSelectedFiles();
+    	 
 		return archivos;
     }
     private class ButtonHandler implements ActionListener
@@ -141,13 +131,13 @@ public class VentanaCollage extends JFrame
             	{
             		
             		img1 = ImageIO.read(archivos[0]);
-            		resize(img1,200,400);
+            		BufferedImage newImg1 =resize(img1,200,400);
             		img2 = ImageIO.read(archivos[1]);
-            		resize(img2,200,400);
-					UnoXDos collage1 = new UnoXDos(img1, img2);
+            		BufferedImage newImg2 =resize(img2,200,400);
+					UnoXDos collage1 = new UnoXDos(newImg1, newImg2);
 					iFinal = collage1.HacerCollage();
 					
-					EditarCollage e = new EditarCollage(iFinal);
+					EditarCollage e = new EditarCollage(iFinal, u);
 					
 				
 				} 
@@ -175,17 +165,17 @@ public class VentanaCollage extends JFrame
             	try 
             	{
             		img1 = ImageIO.read(archivos[0]);
-            		resize(img1,200,200);
+            		BufferedImage newImg1 =resize(img1,200,200);
             		img2 = ImageIO.read(archivos[1]);
-            		resize(img2,200,200);
+            		BufferedImage newImg2 =resize(img2,200,200);
             		img3 = ImageIO.read(archivos[2]);
-            		resize(img3,200,200);
+            		BufferedImage newImg3 =resize(img3,200,200);
             		img4 = ImageIO.read(archivos[3]);
-            		resize(img4,200,200);
-					DosXDos collage1 = new DosXDos(img1, img2, img3, img4);
+            		BufferedImage newImg4 =resize(img4,200,200);
+					DosXDos collage1 = new DosXDos(newImg1, newImg2, newImg3, newImg4);
 					iFinal = collage1.HacerCollage();
 					
-					EditarCollage e = new EditarCollage(iFinal);
+					EditarCollage e = new EditarCollage(iFinal, u);
 					
 				
 				} 
@@ -197,11 +187,14 @@ public class VentanaCollage extends JFrame
 		  	else if(a_event.getSource() == dosxuno)
 		    { 
 		  		File[] archivos = SeleccionarArchivos();
+		  		
 		  		if (archivos.length !=2)
             	{
             		JOptionPane.showMessageDialog(null, "Selecciona DOS archivos");
+            		
             		archivos = SeleccionarArchivos();
             	}
+		  		
             	BufferedImage img1;
             	BufferedImage img2;
             	BufferedImage iFinal;
@@ -209,13 +202,13 @@ public class VentanaCollage extends JFrame
             	try 
             	{
             		img1 = ImageIO.read(archivos[0]);
-            		resize(img1,400,200);
+            		BufferedImage newImg1 =resize(img1,400,200);
             		img2 = ImageIO.read(archivos[1]);
-            		resize(img2,400,200);
-					DosXUno collage1 = new DosXUno(img1, img2);
-					iFinal = collage1.HacerCollage();
-					
-					EditarCollage e = new EditarCollage(iFinal);
+            		BufferedImage newImg2 = resize(img2,400,200);
+					DosXUno collage1 = new DosXUno(newImg1, newImg2);
+					iFinal = collage1.CopiarImg1();
+				
+					EditarCollage e = new EditarCollage(iFinal, u);
 					
 				
 				} 
@@ -240,15 +233,15 @@ public class VentanaCollage extends JFrame
             	try 
             	{
             		img1 = ImageIO.read(archivos[0]);
-            		resize(img1,400,133);
+            		BufferedImage newImg1 =resize(img1,400,133);
             		img2 = ImageIO.read(archivos[1]);
-            		resize(img2,400,133);
+            		BufferedImage newImg2 =resize(img2,400,133);
             		img3 = ImageIO.read(archivos[2]);
-            		resize(img3,400,133);
-					TresXUno collage1 = new TresXUno(img1, img2, img3);
+            		BufferedImage newImg3 =resize(img3,400,133);
+					TresXUno collage1 = new TresXUno(newImg1, newImg2, newImg3);
 					iFinal = collage1.HacerCollage();
 					
-					EditarCollage e = new EditarCollage(iFinal);
+					EditarCollage e = new EditarCollage(iFinal, u);
 					
 				
 				} 
