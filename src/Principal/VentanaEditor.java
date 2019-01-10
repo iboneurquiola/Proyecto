@@ -9,8 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.sql.Statement;
 import java.util.concurrent.TimeoutException;
 
 import javax.imageio.ImageIO;
@@ -27,9 +32,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamException;
-import com.github.sarxos.webcam.WebcamPanel;
 
 import marvin.gui.MarvinImagePanel;
 import marvin.image.MarvinImage;
@@ -38,15 +40,15 @@ import marvin.plugin.MarvinImagePlugin;
 import marvin.util.MarvinPluginLoader;
 
 
-public class VentanaEditor extends JFrame
+public class VentanaEditor extends JFrame 
 { 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private MarvinImagePanel     imagePanel; 
-    private MarvinImage         image; 
-    private String path;
+	private static MarvinImagePanel     imagePanel; 
+    private static MarvinImage         image; 
+    private static String path;
     private JPanel             panelBottom; 
     private JMenuItem btnMosaico, btnTelevision, btnFixedCamera, btnSceneBack, btnGaussian, btnPixelize, btnAlpha, 
 	btnBlackAndWhite, btnBrightness, btnColorChannel, btnEmboss, btnGrey, btnInvert, btnSepia, btnSkinColorDetection, 
@@ -57,16 +59,19 @@ public class VentanaEditor extends JFrame
 	btnIterated, btnJulia, btnLindenmayer, btnManderbrot, btnText, btnRestoration, btnCrop, btnFloodFill, 
 	btnImageSlicer, btnMaximum, btnMedian, btnMinimum, btnMode, btnSteganography, btnSubtract, btnTexture, 
 	btnFlip, btnRotate, btnScale, btnSkew, btnWaterShed;
-     
-    private JButton volver, seleccionarArchivo, reset, guardar, guardarComo, sacarFoto, compartir;
-     
+    private BufferedImage imagen;
+    private Usuario u;
+    private JButton volver, seleccionarArchivo, reset, guardar, guardarComo,  compartir;
     private MarvinImagePlugin     imagePlugin; 
+   
      
-    public VentanaEditor(String path)  
+    public VentanaEditor(BufferedImage image, Usuario u)  
     { 
-    	if(path != null)
+    	this.u = u;
+    	if(image!= null)
     	{
-    	loadImage(path);
+    		this.imagen = image;
+    		loadImageWebCam(imagen);
     	}
         ButtonHandler buttonHandler = new ButtonHandler(); 
         JMenuBar menu = new JMenuBar();
@@ -453,14 +458,6 @@ public class VentanaEditor extends JFrame
         guardarComo.addActionListener(buttonHandler);
         seleccionarArchivo.addActionListener(buttonHandler); 
         
-        sacarFoto = new JButton();
-        sacarFoto.setBounds(200, 10, 40, 40);
-        ImageIcon sacar = new ImageIcon(getClass().getResource("/images/foto.jpg"));
-        Icon iconoSacarF = new ImageIcon(sacar.getImage().getScaledInstance(sacarFoto.getWidth(), sacarFoto.getHeight(), Image.SCALE_DEFAULT));
-        sacarFoto.setIcon(iconoSacarF);
-        sacarFoto.setToolTipText("Sacar foto");
-     
-        sacarFoto.addActionListener(buttonHandler); 
 
         compartir = new JButton();
         compartir.setBounds(250, 10, 40, 40);
@@ -477,7 +474,7 @@ public class VentanaEditor extends JFrame
         panelBottom.add(reset);
         panelBottom.add(guardar);
         panelBottom.add(guardarComo);
-        panelBottom.add(sacarFoto);
+        
         panelBottom.add(compartir);
 
          
@@ -507,7 +504,13 @@ public class VentanaEditor extends JFrame
         imagePanel.getImage().resize(700, 500);
         imagePanel.setBounds(100, 100, 500, 500);
     } 
-     
+    private void loadImageWebCam(BufferedImage imagen)
+    {
+    	MarvinImage img = new MarvinImage(imagen);
+        imagePanel.setImage(img); 
+        imagePanel.getImage().resize(700, 500);
+        imagePanel.setBounds(100, 100, 500, 500);
+    } 
    
      
     private class ButtonHandler implements ActionListener
@@ -520,23 +523,12 @@ public class VentanaEditor extends JFrame
             } 
   	    else if(a_event.getSource() == seleccionarArchivo)
             { 
-            	JFileChooser file = new JFileChooser();
-				file.setCurrentDirectory(new File (System.getProperty("user.home")));
-				FileNameExtensionFilter filtrojpg = new FileNameExtensionFilter("All images", "jpg", "png");
-				file.addChoosableFileFilter(filtrojpg);
-				int resultado = file.showSaveDialog(null);
-				if (resultado == JFileChooser.APPROVE_OPTION)
-				{
-					File archivoseleccionado = file.getSelectedFile();
+  	    			File archivoseleccionado =seleccionarArchivo();
 					path = archivoseleccionado.getAbsolutePath();
-				
-					
 					loadImage(path);
-				}
-				else if (resultado == JFileChooser.CANCEL_OPTION)
-				{
-					JOptionPane.showMessageDialog(null, "No hay archivo seleccionado.");
-				} 
+				
+				Hilo h = new Hilo();
+		    	h.run();
 			 
             } 
 		  	  else if(a_event.getSource() == reset)
@@ -549,24 +541,26 @@ public class VentanaEditor extends JFrame
 		  	 else if(a_event.getSource() == volver)
 		      { 
 		  		
-				  	VentanaPrincipal f = new VentanaPrincipal();
+				  	VentanaPrincipal f = new VentanaPrincipal(u);
 				  
 				 
 		      }
 		  	 else if(a_event.getSource() == compartir)
 		      { 
 		  		
-			  	EnvioPorMail env = new EnvioPorMail();
+			  	try {
+					EnvioPorMail env = new EnvioPorMail(u,imagePanel.getImage());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				  	
 				 
 		      }
-		  	  else if(a_event.getSource() == sacarFoto)
-		      { 
-		  		SwingUtilities.invokeLater(new WebcamViewerExample());
-		  		
-		      }
+		  	  
             else if(a_event.getSource() == btnTelevision){ 
                 imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.artistic.television.jar");                  
+            
                 imagePlugin.process(image, image); 
             } 
  		else if(a_event.getSource() == btnFixedCamera){ 
@@ -838,20 +832,74 @@ public class VentanaEditor extends JFrame
                 imagePlugin.process(image, image);
                 imagePlugin.setAttribute("hsIntensidade", 50);   
             } 
- 		else if(a_event.getSource() == btnRotate)
+ 
+ 		else if (a_event.getSource() == guardarComo)
  		{
-// 			 double r = Math.toRadians(grados); //se convierte a radianes lo grados 
-//             AffineTransform a = new AffineTransform(); 
-//             a.rotate(r, this.getWidth() / 2, this.getHeight() / 2); //se asigna el angulo y centro de rotacion 
-//             ((Graphics2D) g).setTransform(a); 
-//             g.drawImage(imagen_filtro, 0, 0, this); 
-//             break; 
- 		}
-        
+ 			File fPath = guardarArchivo(); 
+ 			if (fPath==null) 
+ 				return;
+			path = fPath.getAbsolutePath();
+			if (!path.toUpperCase().endsWith("JPG")|| !path.toUpperCase().endsWith("PNG")) {
+				path = path + ".jpg";
+				fPath = new File(path);
+			}
+			if (fPath.exists()) {  // Pide confirmación de sobreescritura
+				int conf = JOptionPane.showConfirmDialog( null,
+						"¡Atención! El fichero indicado ya existe. ¿Quieres sobreescribirlo?", 
+						"Confirmación de fichero ya existente", JOptionPane.YES_NO_OPTION );
+				if (conf!=0) return;  // si no hay confirmación no seguimos
+			}
+			// Intenta salvar la lista al fichero
+			try {
+				ObjectOutputStream oos = new ObjectOutputStream( new FileOutputStream(path) );
+				MarvinImage img = imagePanel.getImage();
+				oos.writeObject( img.getBufferedImage() );
+				oos.close();
 
-            image.update(); 
-            imagePanel.setImage(image); 
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				JOptionPane.showMessageDialog( null, "El fichero " + 
+						path + " no ha podido salvarse.", "Fichero incorrecto", JOptionPane.ERROR_MESSAGE );
+			}
+ 		}
+
+           
         } 
-    } 
+    }
+    private File seleccionarArchivo() {
+		File dirActual = new File( System.getProperty("user.home") );
+		JFileChooser chooser = new JFileChooser( dirActual );
+		chooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
+		chooser.setFileFilter( new FileNameExtensionFilter( 
+				"All images", "jpg", "png" ) );
+		int returnVal = chooser.showOpenDialog( null );
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+			return chooser.getSelectedFile();
+		else 
+			return null;
+	}
+    private File guardarArchivo() {
+		File dirActual = new File( System.getProperty("user.home") );
+		JFileChooser chooser = new JFileChooser( dirActual );
+		chooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
+		int returnVal = chooser.showSaveDialog( null );
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+			return chooser.getSelectedFile();
+		else 
+			return null;
+	}
+    public static BufferedImage Conversion() 
+    {
+    	MarvinImage img = imagePanel.getImage();
+    	BufferedImage bI = img.getBufferedImage();
+    	return bI;
+    }
+    public static void Guardar() 
+    {
+    	 MarvinImageIO.saveImage(image, "user.home");
+    	 
+    	 
+    }
+
   
 }
