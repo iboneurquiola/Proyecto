@@ -59,20 +59,18 @@ public class VentanaEditor extends JFrame
 	btnIterated, btnJulia, btnLindenmayer, btnManderbrot, btnText, btnRestoration, btnCrop, btnFloodFill, 
 	btnImageSlicer, btnMaximum, btnMedian, btnMinimum, btnMode, btnSteganography, btnSubtract, btnTexture, 
 	btnFlip, btnRotate, btnScale, btnSkew, btnWaterShed;
-    private BufferedImage imagen;
-    private Usuario u;
+
     private JButton volver, seleccionarArchivo, reset, guardar, guardarComo,  compartir;
+    private Usuario u;
     private MarvinImagePlugin     imagePlugin; 
-   
+  
      
     public VentanaEditor(BufferedImage image, Usuario u)  
     { 
-    	this.u = u;
-    	if(image!= null)
-    	{
-    		this.imagen = image;
-    		loadImageWebCam(imagen);
-    	}
+    	
+    	
+    	this.u=u;
+    	
         ButtonHandler buttonHandler = new ButtonHandler(); 
         JMenuBar menu = new JMenuBar();
 		JMenu filtros = new JMenu("Filtros");
@@ -504,13 +502,6 @@ public class VentanaEditor extends JFrame
         imagePanel.getImage().resize(700, 500);
         imagePanel.setBounds(100, 100, 500, 500);
     } 
-    private void loadImageWebCam(BufferedImage imagen)
-    {
-    	MarvinImage img = new MarvinImage(imagen);
-        imagePanel.setImage(img); 
-        imagePanel.getImage().resize(700, 500);
-        imagePanel.setBounds(100, 100, 500, 500);
-    } 
    
      
     private class ButtonHandler implements ActionListener
@@ -548,10 +539,12 @@ public class VentanaEditor extends JFrame
 		  	 else if(a_event.getSource() == compartir)
 		      { 
 		  		
-			  	try {
-					EnvioPorMail env = new EnvioPorMail(u,imagePanel.getImage());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
+			  	try 
+			  	{
+					EnvioPorMail env = new EnvioPorMail(u, imagePanel.getImage());
+				} 
+			  	catch (IOException e) {
+		
 					e.printStackTrace();
 				}
 				  	
@@ -560,7 +553,6 @@ public class VentanaEditor extends JFrame
 		  	  
             else if(a_event.getSource() == btnTelevision){ 
                 imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.artistic.television.jar");                  
-            
                 imagePlugin.process(image, image); 
             } 
  		else if(a_event.getSource() == btnFixedCamera){ 
@@ -857,10 +849,9 @@ public class VentanaEditor extends JFrame
 				oos.close();
 
 			} catch (Exception e2) {
-				e2.printStackTrace();
-				JOptionPane.showMessageDialog( null, "El fichero " + 
-						path + " no ha podido salvarse.", "Fichero incorrecto", JOptionPane.ERROR_MESSAGE );
+				
 			}
+			loadImage(path);
  		}
 
            
