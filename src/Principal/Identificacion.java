@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,10 +26,13 @@ public class Identificacion extends JFrame
 	JPasswordField contrasena;
 	Fondo f ;
 	JFrame frame;
+
 	
 	
 	public Identificacion() 
     {
+		
+	
 		frame = new JFrame();
 	
 		frame.setTitle("NERIBO PHOTO EDITOR - Identificación");
@@ -73,28 +78,41 @@ public class Identificacion extends JFrame
 			{
 			
 				
-				if(usuario.getText().toUpperCase().equals("USUARIO") || contrasena.getText().toUpperCase().equals("CONTRASENA"))
+				if(usuario ==null || contrasena == null)
 				{
 					JOptionPane.showMessageDialog(null, "Introduce los datos!");
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null, "Datos introducidos!");
+					
 					String user = usuario.getText();
+					@SuppressWarnings("deprecation")
 					String password = contrasena.getText();
-					
-					
 					Usuario u = new Usuario(user,password);
-					if (cargarDeBD) 
-					{
-//						u.cargarDeTabla( BaseDeDatos.getStatement(), user );
-						VentanaPrincipal f = new VentanaPrincipal();
-					}
 					
-					else 
-					{
-						SolicitudDeCorreo sc = new SolicitudDeCorreo(user,password);
-		
+					try {
+						if (u.comprobar(BaseDeDatos.getStatement()) == true)
+						{
+							if (u.comprobarContra(BaseDeDatos.getStatement()) == true)
+							{
+								JOptionPane.showMessageDialog(null, "Bienvenida " + user );
+								VentanaPrincipal f = new VentanaPrincipal(u);
+							}
+							else
+							{
+								JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
+							}
+						}
+						
+						else 
+						{
+							u.insertarUsuario(BaseDeDatos.getStatement());
+							SolicitudDeCorreo sc = new SolicitudDeCorreo(u);
+
+						}
+					} catch (SQLException e1) {
+						
+						e1.printStackTrace();
 					}
 				frame.dispose();	
 				}
