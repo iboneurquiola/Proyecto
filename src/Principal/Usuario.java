@@ -14,19 +14,19 @@ public class Usuario
 	private static Connection con = null;
 	private static ResultSet rs;
 	private static String usuario;
-	private static String contraseña;
+	private static String contrase�a;
 	private static String correo;
 	private static String cCorreo;
 
 	public Usuario(String u, String c)
 	{
 		this.usuario = u;
-		this.contraseña = c;
+		this.contrase�a = c;
 	}
 	public Usuario()
 	{
 		this.usuario = null;
-		this.contraseña = null;
+		this.contrase�a = null;
 	}
 
 	
@@ -39,7 +39,7 @@ public class Usuario
 		return rs.getString("correo");
 			
 	}
-	public String comprobarContraseña( Statement stm) throws SQLException
+	public String comprobarContrase�a( Statement stm) throws SQLException
 	{
 		con = BaseDeDatos.getConnection();
 		String sentSQL = "SELECT * FROM usuarios " +
@@ -59,7 +59,7 @@ public class Usuario
 		{
 			Usuario u = new Usuario();
 			u.setUsuario(rs.getString(1).toString());
-			u.setContraseña(rs.getString(2).toString());
+			u.setContrase�a(rs.getString(2).toString());
 			usuarios.add(u);
 		}
 		return usuarios;
@@ -72,7 +72,7 @@ public class Usuario
 		{
 			if (usuario.toUpperCase().equals(rs.getString(1).toUpperCase())  )
 			{
-				if (comprobarContraseña(BaseDeDatos.getStatement()).equals(contraseña))
+				if (comprobarContrase�a(BaseDeDatos.getStatement()).equals(contrase�a))
 				{
 					return true;
 				}
@@ -107,7 +107,7 @@ public class Usuario
 		con = BaseDeDatos.getConnection();
 		String sentencia = "INSERT INTO usuarios (usuario, contraseña)  VALUES ("+
 				"'" + usuario + "',"+
-				"'" + contraseña + "')";
+				"'" + contrase�a + "')";
 		con.createStatement().executeUpdate(sentencia);
 	}
 	
@@ -139,14 +139,14 @@ public class Usuario
 
 
 
-	public static String getContraseña() {
-		return contraseña;
+	public static String getContrase�a() {
+		return contrase�a;
 	}
 
 
 
-	public void setContraseña(String contraseña) {
-		Usuario.contraseña = contraseña;
+	public void setContrase�a(String contrase�a) {
+		Usuario.contrase�a = contrase�a;
 	}
 
 
