@@ -53,13 +53,13 @@ public class Identificacion extends JFrame
 		usuario.setBounds(100, 100, 300, 30);
 		f.add(usuario);
 		
-		JLabel lblContraseña = new JLabel("Contraseña:" );
-		lblContraseña.setBounds(20, 140, 300, 30);
-		lblContraseña.setForeground(Color.WHITE);
-		f.add(lblContraseña);	
+		JLabel lblContrasena = new JLabel("Contrasena:" );
+		lblContrasena.setBounds(20, 140, 300, 30);
+		lblContrasena.setForeground(Color.WHITE);
+		f.add(lblContrasena);	
 		
 		contrasena = new JPasswordField (20);
-		contrasena.setToolTipText("Contraseña");
+		contrasena.setToolTipText("Contrasena");
 		contrasena.setBounds(100, 140, 300, 30);
 		f.add(contrasena);
 				
@@ -93,14 +93,15 @@ public class Identificacion extends JFrame
 					try {
 						if (u.comprobar(BaseDeDatos.getStatement()) == true)
 						{
-							if (u.comprobarContra(BaseDeDatos.getStatement()) == true)
+							if (u.comprobarContrasena() == true)
 							{
 								JOptionPane.showMessageDialog(null, "Bienvenida " + user );
 								VentanaPrincipal f = new VentanaPrincipal(u);
 							}
 							else
 							{
-								JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
+								JOptionPane.showMessageDialog(null, "Contrasena incorrecta");
+								Identificacion i = new Identificacion();
 							}
 						}
 						

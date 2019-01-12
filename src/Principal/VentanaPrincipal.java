@@ -77,7 +77,7 @@ public class VentanaPrincipal extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 			
-				VentanaEditor editor = new VentanaEditor(null, u);
+				VentanaEditor editor = new VentanaEditor(u);
 				
 			}	
 		});	

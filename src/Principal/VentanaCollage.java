@@ -104,6 +104,8 @@ public class VentanaCollage extends JFrame
     {
     	JFileChooser dialog = new JFileChooser();
     	 dialog.setMultiSelectionEnabled(true);
+    	 dialog.setFileFilter( new FileNameExtensionFilter( 
+ 				"All images", "jpg", "png" ) );
     	 dialog.showOpenDialog(null);
 
     	 File[] archivos = dialog.getSelectedFiles();
@@ -136,8 +138,8 @@ public class VentanaCollage extends JFrame
             		BufferedImage newImg2 =resize(img2,200,400);
 					UnoXDos collage1 = new UnoXDos(newImg1, newImg2);
 					iFinal = collage1.HacerCollage();
-					
-					EditarCollage e = new EditarCollage(iFinal, u);
+					MarvinImage marvinI = new MarvinImage(iFinal);
+					EditarCollage e = new EditarCollage(marvinI, u);
 					
 				
 				} 
@@ -174,8 +176,8 @@ public class VentanaCollage extends JFrame
             		BufferedImage newImg4 =resize(img4,200,200);
 					DosXDos collage1 = new DosXDos(newImg1, newImg2, newImg3, newImg4);
 					iFinal = collage1.HacerCollage();
-					
-					EditarCollage e = new EditarCollage(iFinal, u);
+					MarvinImage marvinI = new MarvinImage(iFinal);
+					EditarCollage e = new EditarCollage(marvinI, u);
 					
 				
 				} 
@@ -207,8 +209,8 @@ public class VentanaCollage extends JFrame
             		BufferedImage newImg2 = resize(img2,400,200);
 					DosXUno collage1 = new DosXUno(newImg1, newImg2);
 					iFinal = collage1.CopiarImg1();
-				
-					EditarCollage e = new EditarCollage(iFinal, u);
+					MarvinImage marvinI = new MarvinImage(iFinal);
+					EditarCollage e = new EditarCollage(marvinI, u);
 					
 				
 				} 
@@ -240,8 +242,8 @@ public class VentanaCollage extends JFrame
             		BufferedImage newImg3 =resize(img3,400,133);
 					TresXUno collage1 = new TresXUno(newImg1, newImg2, newImg3);
 					iFinal = collage1.HacerCollage();
-					
-					EditarCollage e = new EditarCollage(iFinal, u);
+					MarvinImage marvinI = new MarvinImage(iFinal);
+					EditarCollage e = new EditarCollage(marvinI, u);
 					
 				
 				} 

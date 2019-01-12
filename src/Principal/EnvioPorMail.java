@@ -98,7 +98,7 @@ public class EnvioPorMail extends JFrame
 					String correo = null;
 					try 
 					{
-						correo = u.consultarCorreo(BaseDeDatos.getStatement());
+						correo = u.consultarCorreo();
 						System.out.println(correo);
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block

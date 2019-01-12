@@ -48,9 +48,9 @@ public class SolicitudDeCorreo extends JFrame
 		usuario.setBounds(100, 100, 200, 30);
 		f.add(usuario);
 			
-		JLabel lblContraseña = new JLabel("Contraseña:" );
-		lblContraseña.setBounds(20, 140, 100, 30);
-		f.add(lblContraseña);	
+		JLabel lblContrasena = new JLabel("Contrasena:" );
+		lblContrasena.setBounds(20, 140, 100, 30);
+		f.add(lblContrasena);	
 		
 		JPasswordField contrasena = new JPasswordField (20);
 		contrasena.setBounds(100, 140, 200, 30);

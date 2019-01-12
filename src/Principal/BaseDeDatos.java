@@ -50,7 +50,7 @@ public class BaseDeDatos {
 
 	
 	public static void crearTablaBD() throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS usuarios(usuario VARCHAR(20) NOT NULL PRIMARY KEY,contraseña varchar(225) ,correo varchar(225),cCorreo varchar(225))");
+		PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS usuarios(usuario VARCHAR(20) NOT NULL PRIMARY KEY,contrasena varchar(225) ,correo varchar(225),cCorreo varchar(225))");
 		ps.executeUpdate();
 	
 	}

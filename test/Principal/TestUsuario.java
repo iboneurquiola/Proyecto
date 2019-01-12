@@ -15,7 +15,7 @@ public class TestUsuario
 	Usuario u1;
 	Usuario u2;
 	private static String usuario;
-	private static String contraseña;
+	private static String contrasena;
 
 
 	@Before
@@ -24,7 +24,7 @@ public class TestUsuario
 		u1 = new Usuario();
 		u2 = new Usuario();
 		usuario = null;
-		contraseña = null;
+		contrasena = null;
 	}
 
 	@After
@@ -37,32 +37,31 @@ public class TestUsuario
 	public void testComprobarContrasena() 
 	{
 		usuario = "Manoli";
-		contraseña = "contrausu";
-		u1 = new Usuario (usuario, contraseña);
+		contrasena = "contrausu";
+		u1 = new Usuario (usuario, contrasena);
 		String contra = null;
-		try
-		{
-			contra = u1.comprobarContraseña(BaseDeDatos.getStatement());
-		} 
-		catch (SQLException e) 
-		{
+		try {
+			u1.comprobarContrasena();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		assertEquals (contra, "contrausu");
+		
+		assertEquals (u1.getContrasena(), "contrausu");
 	}
 	
 	@Test
 	public void testActualizar()
 	{
 		usuario = "Pablito";
-		contraseña = "pablito1234";
-		u2 = new Usuario (usuario, contraseña);
-		u2.setContraseña("pablito6789");
+		contrasena = "pablito1234";
+		u2 = new Usuario (usuario, contrasena);
+		u2.setContrasena("pablito6789");
 		String c = null;
 		try
 		{
 			u2.actualizar(BaseDeDatos.getStatement());
-			assertEquals ( c =u2.getContraseña(), "pablito6789");
+			assertEquals ( c =u2.getContrasena(), "pablito6789");
 		} 
 		catch (SQLException e) 
 		{

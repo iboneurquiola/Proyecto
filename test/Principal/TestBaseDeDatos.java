@@ -23,8 +23,8 @@ private Principal.Usuario miusuario;
 	{
 
 		String usuario = "asdfghj";
-		String contraseña = "aaaa";
-		miusuario = new Principal.Usuario( usuario, contraseña) ;
+		String contrasena = "aaaa";
+		miusuario = new Principal.Usuario( usuario, contrasena) ;
 		
 	}
 

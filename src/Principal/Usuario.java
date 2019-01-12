@@ -14,23 +14,23 @@ public class Usuario
 	private static Connection con = null;
 	private static ResultSet rs;
 	private static String usuario;
-	private static String contraseña;
+	private static String contrasena;
 	private static String correo;
 	private static String cCorreo;
 
 	public Usuario(String u, String c)
 	{
 		this.usuario = u;
-		this.contraseña = c;
-	}
-	public Usuario()
-	{
-		this.usuario = null;
-		this.contraseña = null;
+		this.contrasena = c;
 	}
 
-	
-	public String consultarCorreo( Statement stm) throws SQLException
+	public Usuario() 
+	{
+		this.usuario = null;
+		this.contrasena = null;
+	}
+
+	public String consultarCorreo() throws SQLException
 	{
 		con = BaseDeDatos.getConnection();
 		String sentSQL = "SELECT * FROM usuarios " +
@@ -39,13 +39,18 @@ public class Usuario
 		return rs.getString("correo");
 			
 	}
-	public String comprobarContraseña( Statement stm) throws SQLException
+	public boolean comprobarContrasena() throws SQLException
 	{
 		con = BaseDeDatos.getConnection();
 		String sentSQL = "SELECT * FROM usuarios " +
 				"WHERE (usuario = '" + usuario + "')";
 		rs = con.createStatement().executeQuery(sentSQL);
-		return rs.getString("contraseÃ±a");
+		if (rs.getString(2).equals(contrasena))
+		{
+			return true;
+		}
+		
+		return false;
 			
 	}
 	public static ArrayList <Usuario> listaUsuarios( ) throws SQLException
@@ -57,31 +62,14 @@ public class Usuario
 		
 		while(rs.next())
 		{
-			Usuario u = new Usuario();
-			u.setUsuario(rs.getString(1).toString());
-			u.setContraseña(rs.getString(2).toString());
+			Usuario u = new Usuario(rs.getString(1), rs.getString(2));
+			
 			usuarios.add(u);
 		}
 		return usuarios;
 			
 	}
-	public boolean comprobarContra(Statement stm) throws SQLException 
-	{
-		rs = stm.executeQuery("SELECT * FROM usuarios");
-		while(rs.next())
-		{
-			if (usuario.toUpperCase().equals(rs.getString(1).toUpperCase())  )
-			{
-				if (comprobarContraseña(BaseDeDatos.getStatement()).equals(contraseña))
-				{
-					return true;
-				}
-			}	
-		}
-	
-		return false;
-		
-	}
+
 	public String consultarContra(Statement stm) throws SQLException
 	{
 		con = BaseDeDatos.getConnection();
@@ -105,9 +93,9 @@ public class Usuario
 	public void insertarUsuario(Statement stm) throws SQLException
 	{
 		con = BaseDeDatos.getConnection();
-		String sentencia = "INSERT INTO usuarios (usuario, contraseÃ±a)  VALUES ("+
+		String sentencia = "INSERT INTO usuarios (usuario, contrasena)  VALUES ("+
 				"'" + usuario + "',"+
-				"'" + contraseña + "')";
+				"'" + contrasena + "')";
 		con.createStatement().executeUpdate(sentencia);
 	}
 	
@@ -139,14 +127,14 @@ public class Usuario
 
 
 
-	public static String getContraseña() {
-		return contraseña;
+	public static String getContrasena() {
+		return contrasena;
 	}
 
 
 
-	public void setContraseña(String contraseña) {
-		Usuario.contraseña = contraseña;
+	public void setContrasena(String contrasena) {
+		Usuario.contrasena = contrasena;
 	}
 
 

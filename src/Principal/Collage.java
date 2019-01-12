@@ -10,7 +10,13 @@ public class Collage
 	{
 		
 	    iFinal= new BufferedImage(400, 400, BufferedImage.TYPE_3BYTE_BGR);
-	    iFinal.getGraphics().drawImage(image, 0, 0, null);
+	    iFinal.getGraphics().drawImage(image, posX, posY, null);
+	     for(int y = posX; y < image.getHeight(); y++){
+	            for(int x = posY; x < image.getWidth(); x++)
+	            {
+	                iFinal.setRGB(x,y, image.getRGB(x,y));
+	            }
+	     }
 	     for(int y = posX; y < image.getHeight(); y++){
 	            for(int x = posY; x < image.getWidth(); x++)
 	            {
