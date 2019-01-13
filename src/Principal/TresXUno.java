@@ -9,7 +9,6 @@ public class TresXUno extends Collage
 	private BufferedImage imagen2;
 	private BufferedImage imagen3;
 
-	private BufferedImage iFinal;
 
 	public TresXUno (BufferedImage img1,BufferedImage img2, BufferedImage img3)
 	{
@@ -21,10 +20,11 @@ public class TresXUno extends Collage
 	public BufferedImage HacerCollage()
 	{
 		
-		iFinal = Collage.CopiarImagen(0,0,imagen1, iFinal);			
-		iFinal = Collage.CopiarImagen(0,200, imagen2, iFinal);
-		iFinal = Collage.CopiarImagen(0,400,imagen3, iFinal);
-		
+		Collage.CopiarImagen(0,0,imagen1);			
+		Collage.CopiarImagen(0,200, imagen2);
+		Collage.CopiarImagen(0,400,imagen3);
+	
+		BufferedImage iFinal = this.getiFinal();
 		
 		
 		return iFinal;

@@ -69,7 +69,7 @@ public class SolicitudDeCorreo extends JFrame
 			{
 			
 				
-				if(usuario == null || contrasena == null)
+				if(usuario.getText().length() == 0|| contrasena.getText().length() == 0)
 				{
 					JOptionPane.showMessageDialog(null, "Uno de los campos está vacío, ¡rellénelo!");
 				}

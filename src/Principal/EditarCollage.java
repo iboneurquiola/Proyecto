@@ -2,9 +2,12 @@ package Principal;
 
 import static marvin.MarvinPluginCollection.crop;
 
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -32,14 +35,18 @@ import marvin.util.MarvinPluginLoader;
 public class EditarCollage extends JFrame
 {
 	 
+		/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 		private static MarvinImagePanel     imagePanel; 
-	    private static MarvinImage backupImage;
+	    private static BufferedImage img;
 		private MarvinImage image; 
-
+		
 	    private JPanel      panelBottom; 
-	    private JMenuItem btnMosaico, btnTelevision, btnGaussian, btnPixelize, btnAlpha, 
+	    private JMenuItem btnMosaico, btnTelevision, btnGaussian, btnPixelize, 
 		btnBrightness, btnEmboss, btnGrey, btnInvert, btnSepia, btnThresholding, btnNeig, btnEdge, btnPrewitt, btnEqualization, btnCircles, 
-		btnErrorDiffusion, btnRylanders, btnColorHistogram, btnGrayHistogram, btnGrayScaleQuantization, btnColorQuantization, btnRestoration, btnCrop, btnMedian, btnFlip, btnRotate, btnScale;
+		btnErrorDiffusion, btnRylanders, btnColorHistogram, btnGrayHistogram, btnGrayScaleQuantization,  btnRestoration,  btnMedian, btnFlip;
 	    private JButton  reset, guardar,volver, guardarComo,compartir;
 	    private Usuario u;
 	    private MarvinImagePlugin     imagePlugin; 
@@ -48,10 +55,11 @@ public class EditarCollage extends JFrame
 	    public EditarCollage(BufferedImage image, Usuario u)  
 	    { 
 	    	this.u = u;
+	    	this.img = image;
 	    	
 	    	
-	    	ButtonHandler buttonHandler = new ButtonHandler(); 
-	        JMenuBar menu = new JMenuBar();
+	    	 ButtonHandler buttonHandler = new ButtonHandler(); 
+	         JMenuBar menu = new JMenuBar();
 	 		JMenu filtros = new JMenu("Filtros");
 	 		menu.add(filtros);
 
@@ -80,21 +88,13 @@ public class EditarCollage extends JFrame
 	 		btnGaussian.addActionListener(buttonHandler);
 	 	
 	 		btnPixelize = new JMenuItem("Pixelize");
-	 		menuBlur.add(btnPixelize);
+	 		editar.add(btnPixelize);
 	 		btnPixelize.addActionListener(buttonHandler);
 	 	
 	 		JMenu menuColor = new JMenu("Color");
 	 		filtros.add(menuColor);
 	 	
-	 		btnAlpha = new JMenuItem("Alpha Boundary");
-	 		menuColor.add(btnAlpha);
-	 		btnAlpha.addActionListener(buttonHandler);
-	 	
-	 	
-	 		btnBrightness = new JMenuItem("Brightness and Contrast");
-	 		editar.add(btnAlpha);
-	 		btnBrightness.addActionListener(buttonHandler);
-	 	
+
 	 		
 	 		btnEmboss = new JMenuItem("Emboss");
 	 		menuColor.add(btnEmboss);
@@ -136,7 +136,7 @@ public class EditarCollage extends JFrame
 	 		btnPrewitt.addActionListener(buttonHandler);
 
 	 		btnEqualization = new JMenuItem("Equalization");
-	 		filtros.add(btnEqualization);
+	 		editar.add(btnEqualization);
 	 		btnEqualization.addActionListener(buttonHandler);
 
 	 	
@@ -175,9 +175,9 @@ public class EditarCollage extends JFrame
 	 		btnGrayScaleQuantization.addActionListener(buttonHandler);
 
 	 		
-	 		btnCrop = new JMenuItem("Crop");
-	 		editar.add(btnCrop);
-	 		btnCrop.addActionListener(buttonHandler);
+	 		btnBrightness = new JMenuItem("Brightness");
+	 		editar.add(btnBrightness);
+	 		btnBrightness.addActionListener(buttonHandler);
 
 	 		
 	 		btnMedian = new JMenuItem("Median");
@@ -187,16 +187,7 @@ public class EditarCollage extends JFrame
 	 		btnFlip = new JMenuItem("Flip");
 	 		editar.add(btnFlip);
 	 		btnFlip.addActionListener(buttonHandler);
-
-	 		btnRotate = new JMenuItem("Rotate");
-	 		editar.add(btnRotate);
-	 		btnRotate.addActionListener(buttonHandler);
-
-	 		btnScale = new JMenuItem("Scale");
-	 		editar.add(btnScale);
-	 		btnScale.addActionListener(buttonHandler);
-
-
+	         
 	        
 			volver = new JButton();
 	        volver.setBounds(0, 10, 40, 40);
@@ -248,19 +239,23 @@ public class EditarCollage extends JFrame
 	        panelBottom.add(guardarComo);
 	        panelBottom.add(compartir);
 
-	        loadImage(image);
-	         
-	        hilo = new HiloCollage();
-	        hilo.start();
+	        imagePanel = new MarvinImagePanel();
+	        
+	       
+	       
 	        
 	        Container l_c = getContentPane(); 
 	        l_c.setLayout(new BorderLayout()); 
 	        l_c.add(menu, BorderLayout.NORTH);
 	        l_c.add(imagePanel, BorderLayout.CENTER); 
+
 	        l_c.add(panelBottom, BorderLayout.SOUTH); 
-	       
-	        backupImage = imagePanel.getImage().clone(); 
+	        
 	      	menu.setVisible(true);
+	      	
+	      	this.loadImage(img);
+		     hilo = new HiloCollage();
+		     hilo.start();
 	         
 	        setSize(900,700);
 	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
@@ -284,7 +279,7 @@ public class EditarCollage extends JFrame
 			  	  else if(a_event.getSource() == reset)
 			      { 
 			  		
-					  	imagePanel.setImage(backupImage);
+					  	loadImage(img);
 					  
 					 
 			      }
@@ -310,180 +305,155 @@ public class EditarCollage extends JFrame
 					 
 			      }
 			  	  
-	            else if(a_event.getSource() == btnTelevision){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.artistic.television.jar");                  
-	                imagePlugin.process(image, image);
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		
-	 		else if(a_event.getSource() == btnGaussian){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.blur.gaussianBlur.jar");                  
-	                imagePlugin.process(image, image);
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnPixelize){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.blur.pixelize.jar");                  
-	                imagePlugin.process(image, image);
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnAlpha){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.alphaBoundary.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		
-	 		else if(a_event.getSource() == btnBrightness){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.brightnessAndContrast.jar");                  
-	                imagePlugin.process(image, image);
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 	
-	            else if(a_event.getSource() == btnEmboss){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.emboss.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnGrey){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.grayScale.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnInvert){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.invert.jar");                  
-	                imagePlugin.process(image, image);
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnSepia){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.sepia.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		
-	 		else if(a_event.getSource() == btnThresholding){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.thresholding.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnNeig){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.thresholdingNeighborhood.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		
-	 		else if(a_event.getSource() == btnEdge){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.edge.edgeDetector.jar");                  
-	                imagePlugin.process(image, image);
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	            else if(a_event.getSource() == btnPrewitt){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.edge.prewitt.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		
-	 		else if(a_event.getSource() == btnEqualization){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.equalization.histogramEqualization.jar");                  
-	                imagePlugin.process(image, image);
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		
-	 		else if(a_event.getSource() == btnCircles){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.halftone.circles.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		
-	 		else if(a_event.getSource() == btnErrorDiffusion){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.halftone.errorDiffusion.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnRylanders){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.halftone.rylanders.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            }
-	            else if(a_event.getSource() == btnColorHistogram){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.histogram.colorHistogram.jar");                  
-	                imagePlugin.process(image, image);
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnGrayHistogram){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.histogram.grayHistogram.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		
-	 		 
-	 		else if(a_event.getSource() == btnGrayScaleQuantization){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.quantization.grayScaleQuantization.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	           
-	 		
-	 		else if(a_event.getSource() == btnRestoration){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.restoration.noiseReduction.jar");                  
-	                imagePlugin.process(image, image);
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnCrop){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.segmentation.crop.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            }
-	            
-	 		else if(a_event.getSource() == btnMedian){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.statistical.median.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	            else if(a_event.getSource() == btnFlip){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.transform.flip.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnRotate){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.transform.rotate.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		else if(a_event.getSource() == btnScale){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.transform.scale.jar");                  
-	                imagePlugin.process(image, image); 
-	                image.update();
-					imagePanel.setImage(image);
-	            } 
-	 		
-	 		else if (a_event.getSource() == btnCrop)
-	 		{
-	 			crop(image, image, 60, 32, 182, 62);
-	 		}
+			  	 else if(a_event.getSource() == btnTelevision){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.artistic.television.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		
+		 		else if(a_event.getSource() == btnGaussian){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.blur.gaussianBlur.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		else if(a_event.getSource() == btnPixelize){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.blur.pixelize.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		
+		 		
+				
+		 		else if(a_event.getSource() == btnBrightness){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.brightnessAndContrast.jar");                  
+		                imagePlugin.setAttribute("contrast", 120);
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 	
+		            else if(a_event.getSource() == btnEmboss){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.emboss.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		else if(a_event.getSource() == btnGrey){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.grayScale.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		else if(a_event.getSource() == btnInvert){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.invert.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		else if(a_event.getSource() == btnSepia){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.sepia.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		
+		 		else if(a_event.getSource() == btnThresholding){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.thresholding.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		else if(a_event.getSource() == btnNeig){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.thresholdingNeighborhood.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		
+		 		else if(a_event.getSource() == btnEdge){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.edge.edgeDetector.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		            else if(a_event.getSource() == btnPrewitt){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.edge.prewitt.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		
+		 		else if(a_event.getSource() == btnEqualization){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.equalization.histogramEqualization.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		
+		 		else if(a_event.getSource() == btnCircles){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.halftone.circles.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		
+		 		else if(a_event.getSource() == btnErrorDiffusion){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.halftone.errorDiffusion.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		else if(a_event.getSource() == btnRylanders){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.halftone.rylanders.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            }
+		            else if(a_event.getSource() == btnColorHistogram){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.histogram.colorHistogram.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		else if(a_event.getSource() == btnGrayHistogram){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.histogram.grayHistogram.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 		
+		 		 
+		 		else if(a_event.getSource() == btnGrayScaleQuantization){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.quantization.grayScaleQuantization.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		         
+		 		
+		 		else if(a_event.getSource() == btnRestoration){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.restoration.noiseReduction.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		 	
+		            
+		 		else if(a_event.getSource() == btnMedian){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.statistical.median.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
+		            else if(a_event.getSource() == btnFlip){ 
+		                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.transform.flip.jar");                  
+		                imagePlugin.process(image, image); 
+		                image.update();
+		                imagePanel.setImage(image);
+		            } 
 	 		else if (a_event.getSource() == guardar)
 	 		{
 	 			Guardar();	
@@ -491,8 +461,29 @@ public class EditarCollage extends JFrame
 	 		else if (a_event.getSource() == guardarComo)
 	 		{
 	 			
-	 		    guardarArchivo();
-	 		    hilo.stop();
+	 		    
+	 		   if (guardarArchivo() == true)
+				{
+					
+					int opcion = JOptionPane.showConfirmDialog(null, "¿Quieres volver a editar una foto?");
+					if(opcion == 0)
+					{
+						VentanaPrincipal f = new VentanaPrincipal(u);
+						dispose();
+						
+					}
+					else
+					{
+						System.exit(0);
+						hilo.stop();
+				 		BaseDeDatos.close();
+					}
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "No se ha podido guardar");
+				}
+	 		   
 	 		}
 	            
 	           
@@ -512,7 +503,7 @@ public class EditarCollage extends JFrame
 			else 
 				return null;
 		}
-	    private void guardarArchivo() 
+	    private boolean guardarArchivo() 
 	    {
 	    	BufferedImage bImage = image.getBufferedImage();
 	    	JFileChooser fileChooser = new JFileChooser();
@@ -521,13 +512,17 @@ public class EditarCollage extends JFrame
 	            try {
 	                ImageIO.write(bImage, "png", new File(fileChooser
 	                        .getSelectedFile().getAbsolutePath()
-	                        + fileChooser.getSelectedFile().getName() +".png" ));
+	                         +".png" ));
 	                JOptionPane.showMessageDialog(null, "¡Guardado!");
-	               
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
+	                return true;
+				} 
+		    	catch (IOException e) 
+		    	{
+		    	
+				}
+	    	}
+			return false;
+	        
 	       
 		}
 	    
@@ -544,22 +539,37 @@ public class EditarCollage extends JFrame
 		    	try 
 		    	{	
 					ImageIO.write(bImage, "png", new File(crear+direct));
+				
 				} 
 		    	catch (IOException e) 
 		    	{
-		
-					e.printStackTrace();
+		    		e.printStackTrace();
 				}
 	    	}
+
 	    
 	    }
 	    public void loadImage(BufferedImage image)
 	    {
+	    	resize(image,700,500);
 	    	this.image = new MarvinImage(image);
-	    	
-	    	imagePanel = new MarvinImagePanel();
 		    imagePanel.setImage(this.image);
-		    imagePanel.getImage().resize(600, 600);
-	    	
+		
+	
+
+	         
 	    }
+	    public static BufferedImage resize(final BufferedImage image, int width, int height) 
+	    {
+	        final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	        final Graphics2D graphics2D = bufferedImage.createGraphics();
+	        graphics2D.setComposite(AlphaComposite.Src);
+	     
+	        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+	        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+	        graphics2D.drawImage(image, 0, 0, width, height, null);
+	        graphics2D.dispose();
+	        return bufferedImage;
+	    }  
 }

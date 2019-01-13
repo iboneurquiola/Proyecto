@@ -263,6 +263,7 @@ public class VentanaCollage extends JFrame
     {
     	BufferedImage img1;
     	BufferedImage img2;
+
     	BufferedImage iFinal;
     	
     	try 
@@ -270,7 +271,9 @@ public class VentanaCollage extends JFrame
     		img1 = ImageIO.read(archivos[0]);
     		BufferedImage newImg1 =resize(img1,600,300);
     		img2 = ImageIO.read(archivos[1]);
-    		BufferedImage newImg2 = resize(img2,600,300);
+    		BufferedImage newImg2 =resize(img2,600,300);
+    
+		
 			DosXUno collage1 = new DosXUno(newImg1, newImg2);
 			iFinal = collage1.CopiarImg1();
 			
@@ -284,17 +287,17 @@ public class VentanaCollage extends JFrame
 		}
 		return null;
     }
-    public static BufferedImage resize(final BufferedImage image, int width, int height) 
-    {
-        final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        final Graphics2D graphics2D = bufferedImage.createGraphics();
-        graphics2D.setComposite(AlphaComposite.Src);
-     
-        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics2D.drawImage(image, 0, 0, width, height, null);
-        graphics2D.dispose();
-        return bufferedImage;
-    }  
+public static BufferedImage resize(final BufferedImage image, int width, int height) 
+{
+    final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    final Graphics2D graphics2D = bufferedImage.createGraphics();
+    graphics2D.setComposite(AlphaComposite.Src);
+ 
+    graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+    graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+    graphics2D.drawImage(image, 0, 0, width, height, null);
+    graphics2D.dispose();
+    return bufferedImage;
+}  
 }

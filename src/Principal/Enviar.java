@@ -18,7 +18,7 @@ import marvin.image.MarvinImage;
 
 public class Enviar 
 {
-	static void enviarConGMail(String user, String contrasena, String destinatario, String asunto, String cuerpo, File imageEnviar) {
+	static boolean enviarConGMail(String user, String contrasena, String destinatario, String asunto, String cuerpo, File imageEnviar) {
 	   
 	    Properties emailProperties = new Properties();
 	    emailProperties.put("mail.smtp.host", "smtp.gmail.com");
@@ -53,9 +53,11 @@ public class Enviar
         transport.sendMessage(message, message.getAllRecipients());
 
         transport.close();
+        return true;
     }
-    catch (MessagingException me) {
-        me.printStackTrace();   //Si se produce un error
+    catch (MessagingException me) 
+	    {
+        return false;
     }
 	}
 

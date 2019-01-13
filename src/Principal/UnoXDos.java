@@ -13,7 +13,6 @@ public class UnoXDos extends Collage
 	private BufferedImage imagen1;
 	private BufferedImage imagen2;
 
-	private BufferedImage iFinal;
 
 
 	public UnoXDos (BufferedImage img1,BufferedImage img2)
@@ -25,9 +24,10 @@ public class UnoXDos extends Collage
 	public BufferedImage HacerCollage()
 	{
 		
-		iFinal = Collage.CopiarImagen(0,0, imagen1, iFinal);
-	
-		iFinal = Collage.CopiarImagen(300,0,imagen2, iFinal);
+		Collage.CopiarImagen(0,0, imagen1);
+		Collage.CopiarImagen(300,0,imagen2);
+		
+		BufferedImage iFinal = this.getiFinal();
 	
 		return iFinal;
 	}

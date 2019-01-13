@@ -12,10 +12,9 @@ import org.junit.Test;
 
 public class TestUsuario 
 {
-	Usuario u1;
+
 	Usuario u2;
-	private static String usuario;
-	private static String contrasena;
+
 	private static String correo;
 	private static String cCorreo;
 
@@ -24,44 +23,44 @@ public class TestUsuario
 	{
 		BaseDeDatos.initBD("usuarios");
 		BaseDeDatos.crearTablaBD();
+		u2 = new Usuario ("Pablito", "pablito1234");
+		correo = "pablo@gmail.com";
+		cCorreo = "pablito12345678";
+		u2.setCorreo(correo);
+		u2.setcCorreo(cCorreo);
+		
 		
 	}
 
 	@After
 	public void tearDown() throws Exception
 	{
-		
+
+		u2.eliminar(BaseDeDatos.getStatement());
+		BaseDeDatos.close();
 	}
 
-	@Test
-	public void testComprobarcontrasena() throws SQLException 
-	{
-		usuario = "Manoli";
-		contrasena = "contrausu";
-		u1 = new Usuario(usuario,contrasena);
-		u1.insertarUsuario(BaseDeDatos.getStatement());
-		
-		String contrasenaDef = u1.consultarContrasena();
-		assertEquals (contrasenaDef, contrasena);
-	}
 	
 	@Test
-	public void testActualizar() throws SQLException
+	public void testCorreo() throws SQLException
 	{
-		usuario = "Pablito";
-		contrasena = "pablito1234";
-		u2 = new Usuario (usuario, contrasena);
+		
 		u2.insertarUsuario(BaseDeDatos.getStatement());
-		correo = "pablo@gmail.com";
-		cCorreo = "pablito12345678";
-		u2.setCorreo(correo);
-		u2.setcCorreo(cCorreo);
+		
 		u2.actualizar(BaseDeDatos.getStatement());
 		
 		String c = u2.consultarCorreo();
-		String cC = u2.consultarContra(BaseDeDatos.getStatement());
 		assertEquals ( c, "pablo@gmail.com");
-		assertEquals ( cC, "pablito12345678");
+	
 	}
-
+	@Test
+	public void testContra() throws SQLException
+	{
+		u2.insertarUsuario(BaseDeDatos.getStatement());
+		
+		u2.actualizar(BaseDeDatos.getStatement());
+		
+		String cC = u2.consultarContra(BaseDeDatos.getStatement());
+		assertEquals ( cC,"pablito12345678");
+	}
 }

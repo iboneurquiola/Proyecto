@@ -52,22 +52,7 @@ public class Usuario
 		
 		return false;
 	}
-	public static ArrayList <Usuario> listaUsuarios( ) throws SQLException
-	{
-		ArrayList<Usuario> usuarios = new ArrayList <Usuario>();
-		con = BaseDeDatos.getConnection();
-		String sentSQL = "SELECT * FROM usuarios ";
-		rs = con.createStatement().executeQuery(sentSQL);
-		
-		while(rs.next())
-		{
-			Usuario u = new Usuario(rs.getString(1), rs.getString(2));
-			
-			usuarios.add(u);
-		}
-		return usuarios;
-			
-	}
+	
 
 	public String consultarContra(Statement stm) throws SQLException
 	{
@@ -85,6 +70,14 @@ public class Usuario
 				"correo ='"+ correo + "'," +
 				"cCorreo = '" + cCorreo + "'" +
 				"WHERE (usuario ='" + usuario+"')";
+		con.createStatement().executeUpdate(sentencia);
+		 
+	}
+	public void eliminar(Statement stm) throws SQLException
+	{
+		con = BaseDeDatos.getConnection();
+		String sentencia = "DELETE FROM usuarios WHERE (usuario = '" +
+			 usuario+"')";
 		con.createStatement().executeUpdate(sentencia);
 		 
 	}

@@ -78,6 +78,7 @@ public class VentanaPrincipal extends JFrame
 			{
 			
 				VentanaEditor editor = new VentanaEditor(u);
+				frame.dispose();
 				
 			}	
 		});	
@@ -89,6 +90,7 @@ public class VentanaPrincipal extends JFrame
 			{
 				
 				VentanaCollage collage = new VentanaCollage(u);
+				frame.dispose();
 			}	
 		});	
 		frame.setVisible(true);

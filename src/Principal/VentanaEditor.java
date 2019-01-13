@@ -48,13 +48,12 @@ public class VentanaEditor extends JFrame
     private MarvinImage         image; 
     private static String path;
     private JPanel             panelBottom; 
-    private JMenuItem btnMosaico, btnTelevision, btnGaussian, btnPixelize, btnAlpha, 
+    private JMenuItem btnMosaico, btnTelevision, btnGaussian, btnPixelize,
 	btnBrightness, btnEmboss, btnGrey, btnInvert, btnSepia, btnThresholding, btnNeig, btnEdge, 
 	btnPrewitt, btnEqualization, btnCircles, 
 	btnErrorDiffusion, btnRylanders, btnColorHistogram, btnGrayHistogram, 
-	btnGrayScaleQuantization, 
-	btnColorQuantization, btnRestoration, btnCrop, btnMedian, 
-	btnFlip, btnRotate, btnScale;
+	btnGrayScaleQuantization,  btnRestoration, btnMedian, 
+	btnFlip;
     private HiloEdicion hilo;
     private JButton volver,sacarFoto, seleccionarArchivo, reset, guardar, guardarComo,  compartir;
     private static Usuario u;
@@ -97,21 +96,13 @@ public class VentanaEditor extends JFrame
 		btnGaussian.addActionListener(buttonHandler);
 	
 		btnPixelize = new JMenuItem("Pixelize");
-		menuBlur.add(btnPixelize);
+		editar.add(btnPixelize);
 		btnPixelize.addActionListener(buttonHandler);
 	
 		JMenu menuColor = new JMenu("Color");
 		filtros.add(menuColor);
 	
-		btnAlpha = new JMenuItem("Alpha Boundary");
-		menuColor.add(btnAlpha);
-		btnAlpha.addActionListener(buttonHandler);
-	
-	
-		btnBrightness = new JMenuItem("Brightness and Contrast");
-		editar.add(btnAlpha);
-		btnBrightness.addActionListener(buttonHandler);
-	
+
 		
 		btnEmboss = new JMenuItem("Emboss");
 		menuColor.add(btnEmboss);
@@ -153,7 +144,7 @@ public class VentanaEditor extends JFrame
 		btnPrewitt.addActionListener(buttonHandler);
 
 		btnEqualization = new JMenuItem("Equalization");
-		filtros.add(btnEqualization);
+		editar.add(btnEqualization);
 		btnEqualization.addActionListener(buttonHandler);
 
 	
@@ -183,18 +174,14 @@ public class VentanaEditor extends JFrame
 		menuHistogram.add(btnGrayHistogram);
 		btnGrayHistogram.addActionListener(buttonHandler);
 
-		
-		JMenu menuQuantization = new JMenu("Quantization");
-		filtros.add(menuQuantization);
-
 		btnGrayScaleQuantization = new JMenuItem("Gray Scale Quantization");
-		menuQuantization.add(btnGrayScaleQuantization);
+		filtros.add(btnGrayScaleQuantization);
 		btnGrayScaleQuantization.addActionListener(buttonHandler);
 
 		
-		btnCrop = new JMenuItem("Crop");
-		editar.add(btnCrop);
-		btnCrop.addActionListener(buttonHandler);
+		btnBrightness = new JMenuItem("Brightness");
+		editar.add(btnBrightness);
+		btnBrightness.addActionListener(buttonHandler);
 
 		
 		btnMedian = new JMenuItem("Median");
@@ -204,14 +191,6 @@ public class VentanaEditor extends JFrame
 		btnFlip = new JMenuItem("Flip");
 		editar.add(btnFlip);
 		btnFlip.addActionListener(buttonHandler);
-
-		btnRotate = new JMenuItem("Rotate");
-		editar.add(btnRotate);
-		btnRotate.addActionListener(buttonHandler);
-
-		btnScale = new JMenuItem("Scale");
-		editar.add(btnScale);
-		btnScale.addActionListener(buttonHandler);
         
 		volver = new JButton();
         volver.setBounds(0, 10, 40, 40);
@@ -284,7 +263,7 @@ public class VentanaEditor extends JFrame
         panelBottom.add(compartir);
 
          
-        // ImagePanel 
+      
         imagePanel = new MarvinImagePanel(); 
          
         Container l_c = getContentPane(); 
@@ -359,6 +338,7 @@ public class VentanaEditor extends JFrame
 		      { 
 		  		
 				  	new VentanaPrincipal(u);
+				  	dispose();
 				  
 				 
 		      }
@@ -396,15 +376,12 @@ public class VentanaEditor extends JFrame
                 image.update();
                 imagePanel.setImage(image);
             } 
- 		else if(a_event.getSource() == btnAlpha){ 
-                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.alphaBoundary.jar");                  
-                imagePlugin.process(image, image); 
-                image.update();
-                imagePanel.setImage(image);
-            } 
  		
+ 		
+		
  		else if(a_event.getSource() == btnBrightness){ 
                 imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.brightnessAndContrast.jar");                  
+                imagePlugin.setAttribute("contrast", 120);
                 imagePlugin.process(image, image); 
                 image.update();
                 imagePanel.setImage(image);
@@ -507,25 +484,14 @@ public class VentanaEditor extends JFrame
                 image.update();
                 imagePanel.setImage(image);
             } 
-            else if(a_event.getSource() == btnColorQuantization){ 
-                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.quantization.colorQuantization.jar");                  
-                imagePlugin.process(image, image); 
-                image.update();
-                imagePanel.setImage(image);
-            } 
- 		
+          
  		else if(a_event.getSource() == btnRestoration){ 
                 imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.restoration.noiseReduction.jar");                  
                 imagePlugin.process(image, image); 
                 image.update();
                 imagePanel.setImage(image);
             } 
- 		else if(a_event.getSource() == btnCrop){ 
-                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.segmentation.crop.jar");                  
-                imagePlugin.process(image, image); 
-                image.update();
-                imagePanel.setImage(image);
-            }
+ 	
             
  		else if(a_event.getSource() == btnMedian){ 
                 imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.statistical.median.jar");                  
@@ -539,23 +505,9 @@ public class VentanaEditor extends JFrame
                 image.update();
                 imagePanel.setImage(image);
             } 
- 		else if(a_event.getSource() == btnRotate){ 
-                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.transform.rotate.jar");                  
-                imagePlugin.process(image, image); 
-                image.update();
-                imagePanel.setImage(image);
-            } 
- 		else if(a_event.getSource() == btnScale){ 
-                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.transform.scale.jar");                  
-                imagePlugin.process(image, image); 
-                image.update();
-                imagePanel.setImage(image);
-            } 
  		
- 		else if (a_event.getSource() == btnCrop)
- 		{
- 			crop(image, image, 60, 32, 182, 62);
- 		}
+ 		
+ 		
  		else if (a_event.getSource() == guardar)
  		{
  			Guardar();	
@@ -563,18 +515,27 @@ public class VentanaEditor extends JFrame
  		else if (a_event.getSource() == guardarComo)
  		{
  			
- 		    guardarArchivo();
- 		   int opcion = JOptionPane.showConfirmDialog(null, "¿Quieres volver a editar una foto?");
-			if(opcion == 0)
-			{
-				VentanaPrincipal f = new VentanaPrincipal(u);
-				dispose();
-			}
-			else
-			{
-				System.exit(0);
-			}
-			hilo.stop();
+ 			 if (guardarArchivo() == true)
+				{
+					
+					int opcion = JOptionPane.showConfirmDialog(null, "¿Quieres volver a editar una foto?");
+					if(opcion == 0)
+					{
+						VentanaPrincipal f = new VentanaPrincipal(u);
+						dispose();
+						
+					}
+					else
+					{
+						System.exit(0);
+						hilo.stop();
+				 		BaseDeDatos.close();
+					}
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "No se ha podido guardar");
+				}
  		}
             
        
@@ -595,7 +556,7 @@ public class VentanaEditor extends JFrame
 		else 
 			return null;
 	}
-    private void guardarArchivo() 
+    private boolean guardarArchivo() 
     {
     	BufferedImage bImage = image.getBufferedImage();
     	JFileChooser fileChooser = new JFileChooser();
@@ -604,13 +565,15 @@ public class VentanaEditor extends JFrame
             try {
                 ImageIO.write(bImage, "png", new File(fileChooser
                         .getSelectedFile().getAbsolutePath()
-                        + fileChooser.getSelectedFile().getName() +".png" ));
+                         +".png" ));
                 JOptionPane.showMessageDialog(null, "¡Guardado!");
-               
+               return true;
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        return false;
        
 	}
     

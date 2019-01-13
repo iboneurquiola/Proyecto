@@ -113,19 +113,27 @@ public class EnvioPorMail extends JFrame
 						e1.printStackTrace();
 					}
 					
-					Enviar.enviarConGMail(correo, contra, d, a, c, outputfile);
-					
-					JOptionPane.showMessageDialog(null, "¡Enviado!");
-					int opcion = JOptionPane.showConfirmDialog(f, "¿Quieres volver a editar una foto?");
-					if(opcion == 0)
+					if (Enviar.enviarConGMail(correo, contra, d, a, c, outputfile) == true)
 					{
-						VentanaPrincipal f = new VentanaPrincipal(u);
-						frame.dispose();
+						JOptionPane.showMessageDialog(null, "¡Enviado!");
+						int opcion = JOptionPane.showConfirmDialog(f, "¿Quieres volver a editar una foto?");
+						if(opcion == 0)
+						{
+							VentanaPrincipal f = new VentanaPrincipal(u);
+							frame.dispose();
+						}
+						else
+						{
+							System.exit(0);
+						}
 					}
 					else
 					{
-						System.exit(0);
+						JOptionPane.showMessageDialog(null, "No se ha podido enviar");
+					
 					}
+					
+					
 					
 					
 				}

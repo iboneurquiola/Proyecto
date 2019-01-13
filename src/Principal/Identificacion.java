@@ -72,21 +72,20 @@ public class Identificacion extends JFrame
 		
 		boton1.addActionListener (new ActionListener()
 		{
-			boolean cargarDeBD;
+		
+			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 			
 				
-				if(usuario ==null || contrasena == null)
+				if(usuario.getText().length() == 0 || contrasena.getText().length() == 0)
 				{
 					JOptionPane.showMessageDialog(null, "Introduce los datos!");
 				}
 				else
 				{
-					
 					String user = usuario.getText();
-					@SuppressWarnings("deprecation")
 					String password = contrasena.getText();
 					Usuario u = new Usuario(user,password);
 					
