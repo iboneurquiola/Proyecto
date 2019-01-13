@@ -24,12 +24,7 @@ public class Usuario
 		this.contrasena = c;
 	}
 
-	public Usuario() 
-	{
-		this.usuario = null;
-		this.contrasena = null;
-	}
-
+	
 	public String consultarCorreo() throws SQLException
 	{
 		con = BaseDeDatos.getConnection();
@@ -39,19 +34,23 @@ public class Usuario
 		return rs.getString("correo");
 			
 	}
-	public boolean comprobarContrasena() throws SQLException
+	public String consultarContrasena() throws SQLException
 	{
 		con = BaseDeDatos.getConnection();
 		String sentSQL = "SELECT * FROM usuarios " +
 				"WHERE (usuario = '" + usuario + "')";
 		rs = con.createStatement().executeQuery(sentSQL);
-		if (rs.getString(2).equals(contrasena))
+		return rs.getString(2);
+			
+	}
+	public boolean comprobarContrasena() throws SQLException
+	{
+		if (consultarContrasena().equals(contrasena))
 		{
 			return true;
 		}
 		
 		return false;
-			
 	}
 	public static ArrayList <Usuario> listaUsuarios( ) throws SQLException
 	{

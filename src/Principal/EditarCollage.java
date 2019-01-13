@@ -259,7 +259,7 @@ public class EditarCollage extends JFrame
 	        l_c.add(imagePanel, BorderLayout.CENTER); 
 	        l_c.add(panelBottom, BorderLayout.SOUTH); 
 	       
-	         
+	        backupImage = imagePanel.getImage().clone(); 
 	      	menu.setVisible(true);
 	         
 	        setSize(900,700);
@@ -277,6 +277,8 @@ public class EditarCollage extends JFrame
 	            if(a_event.getSource() == btnMosaico){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.artistic.mosaic.jar"); 
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	  	   
 			  	  else if(a_event.getSource() == reset)
@@ -310,123 +312,172 @@ public class EditarCollage extends JFrame
 			  	  
 	            else if(a_event.getSource() == btnTelevision){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.artistic.television.jar");                  
-	                imagePlugin.process(image, image); 
+	                imagePlugin.process(image, image);
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		
 	 		else if(a_event.getSource() == btnGaussian){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.blur.gaussianBlur.jar");                  
-	                imagePlugin.process(image, image); 
+	                imagePlugin.process(image, image);
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnPixelize){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.blur.pixelize.jar");                  
-	                imagePlugin.process(image, image); 
+	                imagePlugin.process(image, image);
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnAlpha){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.alphaBoundary.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		
 	 		else if(a_event.getSource() == btnBrightness){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.brightnessAndContrast.jar");                  
-	                imagePlugin.process(image, image); 
+	                imagePlugin.process(image, image);
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 	
 	            else if(a_event.getSource() == btnEmboss){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.emboss.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnGrey){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.grayScale.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnInvert){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.invert.jar");                  
-	                imagePlugin.process(image, image); 
+	                imagePlugin.process(image, image);
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnSepia){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.sepia.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		
 	 		else if(a_event.getSource() == btnThresholding){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.thresholding.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnNeig){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.color.thresholdingNeighborhood.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		
 	 		else if(a_event.getSource() == btnEdge){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.edge.edgeDetector.jar");                  
-	                imagePlugin.process(image, image); 
+	                imagePlugin.process(image, image);
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	            else if(a_event.getSource() == btnPrewitt){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.edge.prewitt.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		
 	 		else if(a_event.getSource() == btnEqualization){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.equalization.histogramEqualization.jar");                  
-	                imagePlugin.process(image, image); 
+	                imagePlugin.process(image, image);
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		
 	 		else if(a_event.getSource() == btnCircles){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.halftone.circles.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		
 	 		else if(a_event.getSource() == btnErrorDiffusion){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.halftone.errorDiffusion.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnRylanders){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.halftone.rylanders.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            }
 	            else if(a_event.getSource() == btnColorHistogram){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.histogram.colorHistogram.jar");                  
-	                imagePlugin.process(image, image); 
+	                imagePlugin.process(image, image);
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnGrayHistogram){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.histogram.grayHistogram.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		
 	 		 
 	 		else if(a_event.getSource() == btnGrayScaleQuantization){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.quantization.grayScaleQuantization.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
-	            else if(a_event.getSource() == btnColorQuantization){ 
-	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.quantization.colorQuantization.jar");                  
-	                imagePlugin.process(image, image); 
-	            } 
+	           
 	 		
 	 		else if(a_event.getSource() == btnRestoration){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.restoration.noiseReduction.jar");                  
-	                imagePlugin.process(image, image); 
+	                imagePlugin.process(image, image);
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnCrop){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.segmentation.crop.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            }
 	            
 	 		else if(a_event.getSource() == btnMedian){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.statistical.median.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	            else if(a_event.getSource() == btnFlip){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.transform.flip.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnRotate){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.transform.rotate.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		else if(a_event.getSource() == btnScale){ 
 	                imagePlugin = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.transform.scale.jar");                  
 	                imagePlugin.process(image, image); 
+	                image.update();
+					imagePanel.setImage(image);
 	            } 
 	 		
 	 		else if (a_event.getSource() == btnCrop)
@@ -443,8 +494,7 @@ public class EditarCollage extends JFrame
 	 		    guardarArchivo();
 	 		    hilo.stop();
 	 		}
-	            image.update();
-				imagePanel.setImage(image);
+	            
 	           
 	        } 
 	    }
@@ -507,7 +557,6 @@ public class EditarCollage extends JFrame
 	    {
 	    	this.image = new MarvinImage(image);
 	    	
-	    	backupImage  = this.image.clone();
 	    	imagePanel = new MarvinImagePanel();
 		    imagePanel.setImage(this.image);
 		    imagePanel.getImage().resize(600, 600);
