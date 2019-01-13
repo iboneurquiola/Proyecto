@@ -19,8 +19,8 @@ public class DosXUno extends Collage
 	public BufferedImage CopiarImg1()
 	{
 		
-		Collage.CopiarImagen(0,0,400, 200, imagen1, iFinal);
-		Collage.CopiarImagen(0,200,400,400, imagen2, iFinal);
+		iFinal = Collage.CopiarImagen(0,0,imagen1, iFinal);
+		iFinal = Collage.CopiarImagen(0,300, imagen2, iFinal);
 		
 		return iFinal;
 	}

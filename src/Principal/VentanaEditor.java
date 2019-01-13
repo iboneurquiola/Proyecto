@@ -350,9 +350,9 @@ public class VentanaEditor extends JFrame
 				image  = new MarvinImage(webImage);
 				hilo = new HiloEdicion();
 				hilo.start();
-			 imagePanel.setImage(image); 
-			 imagePanel.getImage().resize(700, 500);
-			 imagePanel.setBounds(100, 100, 700, 500);
+				imagePanel.setImage(image); 
+				imagePanel.getImage().resize(700, 500);
+				imagePanel.setBounds(100, 100, 700, 500);
 				 
 		      }
 		  	 else if(a_event.getSource() == volver)

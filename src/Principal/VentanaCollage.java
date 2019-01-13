@@ -1,5 +1,6 @@
 package Principal;
 
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -124,29 +125,8 @@ public class VentanaCollage extends JFrame
             		JOptionPane.showMessageDialog(null, "Selecciona DOS archivos");
             		archivos = SeleccionarArchivos();
             	}
-            	
-            	BufferedImage img1;
-            	BufferedImage img2;
-            	BufferedImage iFinal;
-            	
-            	try 
-            	{
-            		
-            		img1 = ImageIO.read(archivos[0]);
-            		BufferedImage newImg1 =resize(img1,200,400);
-            		img2 = ImageIO.read(archivos[1]);
-            		BufferedImage newImg2 =resize(img2,200,400);
-					UnoXDos collage1 = new UnoXDos(newImg1, newImg2);
-					iFinal = collage1.HacerCollage();
-					MarvinImage marvinI = new MarvinImage(iFinal);
-					EditarCollage e = new EditarCollage(marvinI, u);
-					
-				
-				} 
-            	catch (IOException e) {
-					
-					e.printStackTrace();
-				}
+            	BufferedImage iFinal = unoXdos(archivos);
+            	EditarCollage e = new EditarCollage(iFinal, u);
            	      
            	  
             } 
@@ -158,33 +138,9 @@ public class VentanaCollage extends JFrame
             		JOptionPane.showMessageDialog(null, "Selecciona CUATRO archivos");
             		archivos = SeleccionarArchivos();
             	}
-            	BufferedImage img1;
-            	BufferedImage img2;
-            	BufferedImage img3;
-            	BufferedImage img4;
-            	BufferedImage iFinal;
+            	BufferedImage iFinal = dosXdos(archivos);
+            	EditarCollage e = new EditarCollage(iFinal, u);
             	
-            	try 
-            	{
-            		img1 = ImageIO.read(archivos[0]);
-            		BufferedImage newImg1 =resize(img1,200,200);
-            		img2 = ImageIO.read(archivos[1]);
-            		BufferedImage newImg2 =resize(img2,200,200);
-            		img3 = ImageIO.read(archivos[2]);
-            		BufferedImage newImg3 =resize(img3,200,200);
-            		img4 = ImageIO.read(archivos[3]);
-            		BufferedImage newImg4 =resize(img4,200,200);
-					DosXDos collage1 = new DosXDos(newImg1, newImg2, newImg3, newImg4);
-					iFinal = collage1.HacerCollage();
-					MarvinImage marvinI = new MarvinImage(iFinal);
-					EditarCollage e = new EditarCollage(marvinI, u);
-					
-				
-				} 
-            	catch (IOException e) {
-					
-					e.printStackTrace();
-				}
             } 
 		  	else if(a_event.getSource() == dosxuno)
 		    { 
@@ -196,74 +152,149 @@ public class VentanaCollage extends JFrame
             		
             		archivos = SeleccionarArchivos();
             	}
+		  		BufferedImage iFinal = dosXuno(archivos);
+		  		EditarCollage e = new EditarCollage(iFinal, u);
 		  		
-            	BufferedImage img1;
-            	BufferedImage img2;
-            	BufferedImage iFinal;
             	
-            	try 
-            	{
-            		img1 = ImageIO.read(archivos[0]);
-            		BufferedImage newImg1 =resize(img1,400,200);
-            		img2 = ImageIO.read(archivos[1]);
-            		BufferedImage newImg2 = resize(img2,400,200);
-					DosXUno collage1 = new DosXUno(newImg1, newImg2);
-					iFinal = collage1.CopiarImg1();
-					MarvinImage marvinI = new MarvinImage(iFinal);
-					EditarCollage e = new EditarCollage(marvinI, u);
-					
-				
-				} 
-            	catch (IOException e) {
-					
-					e.printStackTrace();
-				}
 		    }
 		  	else if(a_event.getSource() == tresxuno)
 		    { 
+		  		
 		  		File[] archivos = SeleccionarArchivos();
 		  		if (archivos.length !=3)
-            	{
-            		JOptionPane.showMessageDialog(null, "Selecciona TRES archivos");
-            		archivos = SeleccionarArchivos();
-            	}
-            	BufferedImage img1;
-            	BufferedImage img2;
-            	BufferedImage img3;
-            	BufferedImage iFinal;
-            	
-            	try 
-            	{
-            		img1 = ImageIO.read(archivos[0]);
-            		BufferedImage newImg1 =resize(img1,400,133);
-            		img2 = ImageIO.read(archivos[1]);
-            		BufferedImage newImg2 =resize(img2,400,133);
-            		img3 = ImageIO.read(archivos[2]);
-            		BufferedImage newImg3 =resize(img3,400,133);
-					TresXUno collage1 = new TresXUno(newImg1, newImg2, newImg3);
-					iFinal = collage1.HacerCollage();
-					MarvinImage marvinI = new MarvinImage(iFinal);
-					EditarCollage e = new EditarCollage(marvinI, u);
-					
-				
-				} 
-            	catch (IOException e) {
-					
-					e.printStackTrace();
-				} 
+		    	{
+		    		JOptionPane.showMessageDialog(null, "Selecciona TRES archivos");
+		    		archivos = SeleccionarArchivos();
+		    	}
+		  		
+		  		BufferedImage iFinal =tresXuno(archivos);
+		  		EditarCollage e = new EditarCollage(iFinal, u);
+		  		
 		    }
 		  	
         }
         
   
 }
-    public static BufferedImage resize(BufferedImage img, int newW, int newH) {  
-        int w = img.getWidth();  
-        int h = img.getHeight();  
-        BufferedImage dimg = new BufferedImage(newW, newH, img.getType());  
-        Graphics2D g = dimg.createGraphics();  
-        g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);  
-        g.dispose();  
-        return dimg;  
+    public static BufferedImage unoXdos(File[] archivos)
+    {
+    	BufferedImage img1;
+    	BufferedImage img2;
+    	BufferedImage iFinal;
+    	
+    	try 
+    	{
+    		
+    		img1 = ImageIO.read(archivos[0]);
+    		BufferedImage newImg1 =resize(img1,300,600);
+    		img2 = ImageIO.read(archivos[1]);
+    		BufferedImage newImg2 =resize(img2,300,600);
+			UnoXDos collage1 = new UnoXDos(newImg1, newImg2);
+			iFinal = collage1.HacerCollage();
+			return iFinal;
+			
+		
+		} 
+    	catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+    	return null;
+    }
+    public static BufferedImage dosXdos(File[] archivos)
+    {
+    	BufferedImage img1;
+    	BufferedImage img2;
+    	BufferedImage img3;
+    	BufferedImage img4;
+    	BufferedImage iFinal;
+    	
+    	try 
+    	{
+    		img1 = ImageIO.read(archivos[0]);
+    		BufferedImage newImg1 =resize(img1,300,300);
+    		img2 = ImageIO.read(archivos[1]);
+    		BufferedImage newImg2 =resize(img2,300,300);
+    		img3 = ImageIO.read(archivos[2]);
+    		BufferedImage newImg3 =resize(img3,300,300);
+    		img4 = ImageIO.read(archivos[3]);
+    		BufferedImage newImg4 =resize(img4,300,300);
+			DosXDos collage1 = new DosXDos(newImg1, newImg2, newImg3, newImg4);
+			iFinal = collage1.HacerCollage();
+			return iFinal;
+			
+		
+		} 
+    	catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+    	return null;
+    }
+    public static BufferedImage tresXuno(File[] archivos)
+    {
+    	
+    	BufferedImage img1;
+    	BufferedImage img2;
+    	BufferedImage img3;
+    	BufferedImage iFinal;
+    	
+    	try 
+    	{
+    		img1 = ImageIO.read(archivos[0]);
+    		BufferedImage newImg1 =resize(img1,600,200);
+    		img2 = ImageIO.read(archivos[1]);
+    		BufferedImage newImg2 =resize(img2,600,200);
+    		img3 = ImageIO.read(archivos[2]);
+    		BufferedImage newImg3 =resize(img3,600,200);
+			TresXUno collage1 = new TresXUno(newImg1, newImg2, newImg3);
+			iFinal = collage1.HacerCollage();
+			
+			return iFinal;
+		
+		} 
+    	catch (IOException e) {
+			
+			e.printStackTrace();
+    	}
+    	return null;
+    }
+    public static BufferedImage dosXuno(File[] archivos)
+    {
+    	BufferedImage img1;
+    	BufferedImage img2;
+    	BufferedImage iFinal;
+    	
+    	try 
+    	{
+    		img1 = ImageIO.read(archivos[0]);
+    		BufferedImage newImg1 =resize(img1,600,300);
+    		img2 = ImageIO.read(archivos[1]);
+    		BufferedImage newImg2 = resize(img2,600,300);
+			DosXUno collage1 = new DosXUno(newImg1, newImg2);
+			iFinal = collage1.CopiarImg1();
+			
+			return iFinal;
+			
+		
+		} 
+    	catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		return null;
+    }
+    public static BufferedImage resize(final BufferedImage image, int width, int height) 
+    {
+        final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        final Graphics2D graphics2D = bufferedImage.createGraphics();
+        graphics2D.setComposite(AlphaComposite.Src);
+     
+        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.drawImage(image, 0, 0, width, height, null);
+        graphics2D.dispose();
+        return bufferedImage;
     }  
 }

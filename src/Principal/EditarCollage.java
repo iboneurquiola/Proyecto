@@ -31,10 +31,7 @@ import marvin.util.MarvinPluginLoader;
 
 public class EditarCollage extends JFrame
 {
-	 /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	 
 		private static MarvinImagePanel     imagePanel; 
 	    private static MarvinImage backupImage;
 		private MarvinImage image; 
@@ -48,21 +45,13 @@ public class EditarCollage extends JFrame
 	    private MarvinImagePlugin     imagePlugin; 
 	    private HiloCollage hilo;
 	     
-	    public EditarCollage(MarvinImage image, Usuario u)  
+	    public EditarCollage(BufferedImage image, Usuario u)  
 	    { 
-	    	
-	    	
 	    	this.u = u;
 	    	
-	    	this.image = image;
-
-		    imagePanel.setImage(image);
-		    imagePanel.getImage().resize(600, 600);
-		    imagePanel.setBounds(100, 100, 600, 600);
-	    	backupImage  = image.clone();
 	    	
-	    	 ButtonHandler buttonHandler = new ButtonHandler(); 
-	         JMenuBar menu = new JMenuBar();
+	    	ButtonHandler buttonHandler = new ButtonHandler(); 
+	        JMenuBar menu = new JMenuBar();
 	 		JMenu filtros = new JMenu("Filtros");
 	 		menu.add(filtros);
 
@@ -259,7 +248,7 @@ public class EditarCollage extends JFrame
 	        panelBottom.add(guardarComo);
 	        panelBottom.add(compartir);
 
-	     
+	        loadImage(image);
 	         
 	        hilo = new HiloCollage();
 	        hilo.start();
@@ -513,5 +502,15 @@ public class EditarCollage extends JFrame
 				}
 	    	}
 	    
+	    }
+	    public void loadImage(BufferedImage image)
+	    {
+	    	this.image = new MarvinImage(image);
+	    	
+	    	backupImage  = this.image.clone();
+	    	imagePanel = new MarvinImagePanel();
+		    imagePanel.setImage(this.image);
+		    imagePanel.getImage().resize(600, 600);
+	    	
 	    }
 }

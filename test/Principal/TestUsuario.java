@@ -34,20 +34,21 @@ public class TestUsuario
 	}
 
 	@Test
-	public void testComprobarContrasena() 
+	public void testComprobarcontraseñañañana() 
 	{
 		usuario = "Manoli";
 		contrasena = "contrausu";
 		u1 = new Usuario (usuario, contrasena);
-		String contra = null;
-		try {
-			u1.comprobarContrasena();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		boolean contra = (Boolean) null;
+		try
+		{
+			contra = u1.comprobarContrasena();
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
-		
-		assertEquals (u1.getContrasena(), "contrausu");
+		assertEquals (contra, "contrausu");
 	}
 	
 	@Test

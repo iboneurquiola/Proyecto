@@ -25,9 +25,9 @@ public class UnoXDos extends Collage
 	public BufferedImage HacerCollage()
 	{
 		
-		iFinal = Collage.CopiarImagen(0,0,200,400, imagen1, imagen2);
+		iFinal = Collage.CopiarImagen(0,0, imagen1, iFinal);
 	
-		iFinal = Collage.CopiarImagen(200,0,400,400,imagen2, iFinal);
+		iFinal = Collage.CopiarImagen(300,0,imagen2, iFinal);
 	
 		return iFinal;
 	}

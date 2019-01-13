@@ -21,10 +21,10 @@ public class DosXDos extends Collage
 	public BufferedImage HacerCollage()
 	{
 		
-		Collage.CopiarImagen(0,0,200,200, imagen1, iFinal);
-		Collage.CopiarImagen(200,0,400,200,imagen2, iFinal);
-		Collage.CopiarImagen(0,200,200,400, imagen3, iFinal);
-		Collage.CopiarImagen(200,200,400,400, imagen4, iFinal);
+		iFinal = Collage.CopiarImagen(0,0, imagen1, iFinal);
+		iFinal = Collage.CopiarImagen(300,0,imagen2, iFinal);
+		iFinal = Collage.CopiarImagen(0,300, imagen3, iFinal);
+		iFinal = Collage.CopiarImagen(300,300,imagen4, iFinal);
 		
 		
 		return iFinal;
